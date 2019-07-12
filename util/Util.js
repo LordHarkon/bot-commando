@@ -1,3 +1,4 @@
+const canvas = require('canvas');
 const yes = ['yes', 'y', 'ye', 'yeah', 'yup', 'yea', 'ya'];
 const no = ['no', 'n', 'nah', 'nope', 'nop'];
 
@@ -96,5 +97,33 @@ module.exports = class Util {
 		const spoilers = (clean.match(/\|\|/g) || []).length;
 		if (spoilers !== 0 && (spoilers && (spoilers % 2))) clean += '||';
 		return clean;
+	}
+
+	static applyText(canvas, text) {
+		const ctx = canvas.getContext('2d');
+
+		let fontSize = 70;
+
+		do{
+			ctx.font = `${fontSize -= 10}px open-sans`;
+		} while (ctx.measureText(text).width > canvas.width - 300);
+
+		return ctx.font;
+	}
+
+	static nextLevel(level) {
+		return Math.round(0.04 * Math.pow(level, 3) + 0.8 * Math.pow(level, 2) + 2 * level) * 6;
+	}
+
+	static findChannel(client, name) { // client = client/guild
+		return client.channels.find(x => x.name === name);
+	}
+
+	static findGuild(client, id) { // client = this.client
+		return client.guilds.get(id);
+	}
+
+	static percentage(x,y){
+		return parseFloat(((x/y)*100).toFixed(1));
 	}
 }

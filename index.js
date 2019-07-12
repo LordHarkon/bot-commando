@@ -12,6 +12,8 @@ client.registry
     .registerDefaultTypes()
     .registerTypesIn(path.join(__dirname, 'types'))
     .registerGroups([
+        ['general', 'General'],
+        ['info', 'Information'],
         ['misc', 'Misc'],
         ['mod', 'Moderation'],
         ['util', 'Utility']
@@ -28,6 +30,7 @@ client.registry
 client
     .on('ready', () => require('./events/ready')(client))
     .on('message', (message) => require('./events/message')(message))
+    .on('guildBanAdd', (guild, user) => require('./events/guildBanAdd')(guild, user))
     .on('disconnected', () => require('./events/disconnected'))
     .on('reconnecting', () => require('./events/reconnecting'))
     .on('commandError', (cmd, err) => require('./events/commandError')(cmd, err))
