@@ -2,6 +2,11 @@ const bettersqlite3 = require('better-sqlite3');
 const db = new bettersqlite3('database.sqlite');
 
 module.exports = class Database {
+    static closeDatabase() {
+        process.on('exit', () => db.close());
+        console.log('Database closed.');
+    }
+    
     static hasTable(table) {
         return db.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name=${sanitizeKeyName(table)};`)
             .then(Boolean);

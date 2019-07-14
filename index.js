@@ -16,6 +16,7 @@ client.registry
         ['info', 'Information'],
         ['misc', 'Misc'],
         ['mod', 'Moderation'],
+        ['polls', 'Polls'],
         ['util', 'Utility']
     ])
     .registerDefaultCommands({
@@ -24,6 +25,7 @@ client.registry
         prefix: false,
         eval_: false,
 		commandState: false,
+        unknownCommand: false
     })
     .registerCommandsIn(path.join(__dirname, 'commands'));
 

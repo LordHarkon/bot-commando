@@ -40,7 +40,7 @@ module.exports = class commandName extends Command {
             timestamp: new Date(),
             author: {
                 name: user.username,
-                icon_url: user.avatarURL
+                icon_url: user.displayAvatarURL()
             }
         }})
     }

@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { RichEmbed } = require('discord.js');
+const { closeDatabase } = require('../../util/better-sqlite3');
 
 module.exports = class commandName extends Command {
     constructor(client) {
@@ -14,7 +14,9 @@ module.exports = class commandName extends Command {
         })
     }
 
-    run(msg) {
+    async run(msg) {
+        await msg.say('Closing...').then(x => x.delete(500));
+        await closeDatabase();
         process.exit();
     }
 }
