@@ -157,7 +157,7 @@ exports.setPlayer = (player) => {
 // ------------------------Bank--------------------------- //
 check('bank', ['id TEXT PRIMARY KEY', 'money INTEGER', 'loan INTEGER', 'day INTEGER', 'interest INTEGER', 'date INTEGER', 'multiplier INTEGER']);
 
-client.getOneB = getOne('bank');
+client.getB = getOne('bank');
 client.setB = set('bank', ['id', 'money', 'loan', 'day', 'interest', 'date', 'multiplier']);
 
 exports.getBank = (id) => {

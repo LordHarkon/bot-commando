@@ -16,6 +16,7 @@ client.registry
         ['info', 'Information'],
         ['misc', 'Misc'],
         ['mod', 'Moderation'],
+        ['money', 'Bank'],
         ['polls', 'Polls'],
         ['util', 'Utility']
     ])
