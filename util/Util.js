@@ -123,6 +123,10 @@ module.exports = class Util {
 		return client.guilds.get(id);
 	}
 
+	static findEmoji(client, name) { // client = this.client
+		return client.emojis.find(emoji => emoji.name == name);
+	}
+
 	static percentage(x,y){
 		return parseFloat(((x/y)*100).toFixed(1));
 	}

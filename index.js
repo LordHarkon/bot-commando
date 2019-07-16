@@ -10,7 +10,6 @@ const client = new Client({
 
 client.registry
     .registerDefaultTypes()
-    .registerTypesIn(path.join(__dirname, 'types'))
     .registerGroups([
         ['general', 'General'],
         ['info', 'Information'],
@@ -18,6 +17,7 @@ client.registry
         ['mod', 'Moderation'],
         ['money', 'Bank'],
         ['polls', 'Polls'],
+        ['response', 'responsive'],
         ['util', 'Utility']
     ])
     .registerDefaultCommands({

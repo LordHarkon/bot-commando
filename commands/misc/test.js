@@ -7,7 +7,11 @@ module.exports = class testCommand extends Command {
             name: 'test',
             group: 'misc',
             memberName: 'test',
-            description: 'test'
+            description: 'test',
+            throttling: {
+                usages: 1,
+                duration: 3600
+            }
         })
     }
 
