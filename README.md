@@ -7,10 +7,15 @@ Bot (Commando) is a bot created for a private server using the framework [discor
 The bot has currently a total of 45 commands.
 
 *Economy
+
 ⋅⋅*Bank
+
 ⋅⋅*Convert
+
 ⋅⋅*Transfer
+
 ⋅⋅*Daily
+
 ⋅⋅*Weekly
 
 *Games
