@@ -1,6 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { RichEmbed } = require('discord.js');
-const db = require('../../util/database.js');
+const { getLevel, getExperience, getNextLevelXP } = require('../../util/level');
 const { percentage } = require('../../util/Util');
 
 module.exports = class commandName extends Command {
@@ -11,7 +10,6 @@ module.exports = class commandName extends Command {
             aliases: ['lv', 'lvl'],
             group: 'info',
             description: 'Shows your current amount of experience and level.',
-            guildOnly: true,
             throttling: {
                 usages: 1,
                 duration: 2
@@ -28,11 +26,9 @@ module.exports = class commandName extends Command {
     }
 
     run(msg, { user }) {
-        var score = db.getLevel(user.id);
-
-        var Level       = score.level;
-        var Experience  = score.experience;
-        var nextLevelXP = score.nextLevelXP;
+        var Level       = getLevel(user.id);
+        var Experience  = getExperience(user.id);
+        var nextLevelXP = getNextLevelXP(user.id);
 
         msg.say({embed: {
             color: parseInt(user.id.substr(12,user.id.length)),
@@ -40,7 +36,7 @@ module.exports = class commandName extends Command {
             timestamp: new Date(),
             author: {
                 name: user.username,
-                icon_url: user.displayAvatarURL()
+                icon_url: user.displayAvatarURL({size: 2048})
             }
         }})
     }

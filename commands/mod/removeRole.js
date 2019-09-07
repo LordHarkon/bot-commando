@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { RichEmbed } = require('discord.js');
+const { GUILDID } = process.env;
 
 module.exports = class removeRoleCommand extends Command {
     constructor(client) {
@@ -33,7 +33,7 @@ module.exports = class removeRoleCommand extends Command {
     }
 
     run(msg, { user, role }) {
-        msg.guild.member(user).removeRole(role)
+        this.client.guilds.get(GUILDID).members.get(user.id).roles.remove(role)
         msg.say(`Successfully took away the role ${role} from ${user}.`);
     }
 }

@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { RichEmbed } = require('discord.js');
+const { GUILDID } = process.env;
 
 module.exports = class addRoleCommand extends Command {
     constructor(client) {
@@ -33,7 +33,7 @@ module.exports = class addRoleCommand extends Command {
     }
 
     run(msg, { user, role }) {
-        msg.guild.member(user).addRole(role)
+        this.client.guilds.get(GUILDID).members.get(user.id).roles.add(role)
         msg.say(`Successfully added ${role} to ${user}.`);
     }
 }

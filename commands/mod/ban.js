@@ -27,7 +27,7 @@ module.exports = class banCommand extends Command {
     run(msg, { user }) {
         
         if (msg.guild.member(user).hasPermission('ADMINISTRATOR')) return msg.reply('I can not ban this user, he has higher permission than I do.');
-        if (!msg.guild.me.hasPermission('BAN_MEMBERS')) return msg.reply('I need the permission `BAN_MEMBERS` for this to work.');
+        // if (!msg.guild.me.hasPermission('BAN_MEMBERS')) return msg.reply('I need the permission `BAN_MEMBERS` for this to work.');
         
         msg.guild.member(user).ban();
         msg.say(`Successfully banned ${user}.`);

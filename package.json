@@ -10,14 +10,18 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "better-sqlite3": "^5.4.0",
-    "canvas": "^2.5.0",
+    "better-sqlite3": "^5.4.2",
+    "canvas": "^2.6.0",
     "common-tags": "^1.8.0",
+    "d20": "^1.4.1",
     "discord.js": "github:discordjs/discord.js",
     "discord.js-commando": "github:discordjs/Commando#master",
-    "dotenv": "^8.0.0",
+    "dotenv": "^8.1.0",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "slot-machine": "^2.1.0",
+    "snekfetch": "^4.0.4",
+    "superagent": "^5.1.0"
   }
 }

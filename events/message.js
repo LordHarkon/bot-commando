@@ -10,7 +10,6 @@ module.exports = async (message) => {
     if(message.channel.type === "dm" || message.channel.type === "group" || message.author.bot) return;
 
     const client = message.client;
-    const member = message.author;
     const xpLogs = findChannel(client, XPLOGS);
 
     const LevelSystem = getLevel(message.author.id);
@@ -45,7 +44,7 @@ module.exports = async (message) => {
 
     gibRole = (roleName) => {
         let role = client.guilds.get(GUILDID).roles.find(role => role.name === roleName);
-        message.guild.member(message.author).addRole(role);
+        client.guilds.get(GUILDID).members.get(message.author.id).roles.add(role)
     }
 
     if(Level < 10) '';
@@ -72,7 +71,43 @@ module.exports = async (message) => {
     }
 
     if (Experience >= nextLevel(Level + 1)) {
-        xpLogs.send(`<@${member.id}>, Congratulations, you are now level ${Level + 1}! :tada:`);
+        const level = Level;
+        const canvas = Canvas.createCanvas(700, 250);
+		const ctx = canvas.getContext('2d');
+
+		const background = await Canvas.loadImage('./assets/images/bg.png');
+        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+		
+		ctx.strokeStyle = '#74037b';
+		ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        
+		ctx.font = '28px open-sans';
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText('Congratulations,', canvas.width / 2.5, canvas.height / 3.5);
+        
+		ctx.font = applyText(canvas, message.author.username);
+		ctx.fillStyle = '#ffffff';
+		ctx.fillText(`${message.author.username}!`, canvas.width / 2.5, canvas.height / 1.8);
+        
+		ctx.font = '30px open-sans';
+        ctx.fillStyle = '#ffffff';
+		ctx.fillText(`You are now level ${level + 1}!`, canvas.width / 2.5, canvas.height / 1.25);
+        
+		ctx.font = '15px open-sans';
+        ctx.fillStyle = '#ffffff';
+		ctx.fillText(`EXPLOSIOOOOON!`, canvas.width / 1.9, canvas.height / 1.1);
+		
+		ctx.beginPath();
+        ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
+        ctx.closePath();
+		ctx.clip();
+		
+		const avatar = await Canvas.loadImage(`https://cdn.discordapp.com/avatars/${message.author.id}/${message.author.avatar}.png`);
+		ctx.drawImage(avatar, 25, 25, 200, 200);
+        
+        const attachment = canvas.toBuffer();
+        
+        xpLogs.send({ files: [{ attachment, name: 'levelup.png' }] })
         
         let xp = nextLevel(LevelSystem.level + 1);
         let res = Number.parseInt(LevelSystem.experience, 10) - Number.parseInt(xp, 10);

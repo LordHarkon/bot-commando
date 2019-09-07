@@ -33,12 +33,12 @@ module.exports = class suggestionCommand extends Command {
             .setTitle("New Suggestion")
             .setDescription(string)
             .setColor("RED")
-            .setThumbnail(msg.author.displayAvatarURL())
-            .setAuthor(msg.author.tag, msg.author.displayAvatarURL())
+            .setThumbnail(msg.author.displayAvatarURL({size: 2048}))
+            .setAuthor(msg.author.tag, msg.author.displayAvatarURL({size: 2048}))
             .setFooter(`User ID: ${msg.author.id}`)
             .setTimestamp()
 
-        const message = await channel.send({ embed });
+        const message = await channel.send(embed);
         await msg.react('✅');
         return msg.reply(`Your suggestion has been successfully submitted!`);
     }

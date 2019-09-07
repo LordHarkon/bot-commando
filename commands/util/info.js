@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const moment = require('moment');
 require('moment-duration-format');
 const { formatNumber } = require('../../util/Util');
@@ -23,9 +23,9 @@ module.exports = class InfoCommand extends Command {
 	}
 
 	run(msg) {
-		const embed = new RichEmbed()
+		const embed = new MessageEmbed()
 			.setColor(0x00AE86)
-			.setFooter('©Mors et Vita#0001')
+			.setFooter('©Mors et Vita#5324')
 			.addField('❯ Commands', formatNumber(this.client.registry.commands.size), true)
             .addField('❯ Home Server', `[Here](https://discord.gg/mn5xMbE)`, true)
             .addField('❯ Source Code', 'N/A', true)

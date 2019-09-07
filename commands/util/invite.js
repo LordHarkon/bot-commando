@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const { stripIndents } = require('common-tags');
+const { INVITELINK } = process.env;
 
 module.exports = class InviteCommand extends Command {
     constructor(client) {
@@ -19,7 +20,7 @@ module.exports = class InviteCommand extends Command {
     run(msg) {
         return msg.say(stripIndents`
         The Server invite is:
-        <https://discord.gg/mn5xMbE>
+        <${INVITELINK}>
         `);
     }
 }

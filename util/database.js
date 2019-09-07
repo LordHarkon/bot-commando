@@ -80,29 +80,6 @@ exports.setWarnings = (Warning) => {
 }
 // ----------------------Warnings------------------------- //
 
-// -----------------------Cases--------------------------- //
-check('caseNum', ['id TEXT PRIMARY KEY', 'number INTEGER']);
-
-client.getCaseNum = getOne('caseNum');
-client.setCaseNum = set('caseNum', ['id', 'number']);
-
-exports.getCase = () => {
-    var caseNumber = client.getCaseNumber.get('caseNumber');
-
-    if (!caseNumber) {
-        caseNumber = {
-            id: 'caseNumber',
-            number: 0
-        }
-    };
-}
-
-exports.setCase = (cases) => {
-    client.setCaseNumber.run(cases);
-    return true;
-}
-// -----------------------Cases--------------------------- //
-
 // ----------------------GTNGame-------------------------- //
 check('GTN_game', ['id TEXT PRIMARY KEY', 'number INTEGER', 'started TEXT']);
 

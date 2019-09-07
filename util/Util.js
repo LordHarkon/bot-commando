@@ -1,4 +1,4 @@
-const canvas = require('canvas');
+const Canvas = require('canvas');
 const yes = ['yes', 'y', 'ye', 'yeah', 'yup', 'yea', 'ya'];
 const no = ['no', 'n', 'nah', 'nope', 'nop'];
 
