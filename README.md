@@ -6,77 +6,72 @@ Bot (Commando) is a bot created for a private server using the framework [discor
 
 The bot has currently a total of 45 commands.
 
-*Economy
+* Economy
+  * Bank
+  * Convert
+  * Transfer
+  * Daily
+  * Weekly
 
-⋅⋅*Bank
+* Games
+  * Roulette
+  * RPS
+  * Slots
 
-⋅⋅*Convert
+* General
+  * Suggestions
 
-⋅⋅*Transfer
+* Image
+  * Cuddle
+  * Pat
+  * Poke
+  * Slap
 
-⋅⋅*Daily
+* Information
+  * Avatar
+  * Leaderboard
+  * Level
+  * Status
+  * UserInfo
+  * Warnings
 
-⋅⋅*Weekly
+* Moderation
+  * AddRole
+  * RemoveRole
+  * Kick
+  * Ban
+  * Purge
+  * Remove-Warning
+  * Warn
 
-*Games
-⋅⋅*Roulette
-⋅⋅*RPS
-⋅⋅*Slots
+* NSFW
+  * Lewd
 
-*General
-⋅⋅*Suggestions
+* Owner
+  * CE
+  * CF
+  * CL
+  * Test
 
-*Image
-⋅⋅*Cuddle
-⋅⋅*Pat
-⋅⋅*Poke
-⋅⋅*Slap
+* Random
+  * 8Ball
+  * D20
+  * DadJokes
+  * Kabu
+  * Roll
 
-*Information
-⋅⋅*Avatar
-⋅⋅*Leaderboard
-⋅⋅*Level
-⋅⋅*Status
-⋅⋅*UserInfo
-⋅⋅*Warnings
+* Response
+  * Greet
+  * Unflip
 
-*Moderation
-⋅⋅*AddRole
-⋅⋅*RemoveRole
-⋅⋅*Kick
-⋅⋅*Ban
-⋅⋅*Purge
-⋅⋅*Remove-Warning
-⋅⋅*Warn
-
-*NSFW
-⋅⋅*Lewd
-
-*Owner
-⋅⋅*CE
-⋅⋅*CF
-⋅⋅*CL
-⋅⋅*Test
-
-*Random
-⋅⋅*8Ball
-⋅⋅*D20
-⋅⋅*DadJokes
-⋅⋅*Kabu
-⋅⋅*Roll
-
-*Response
-⋅⋅*Greet
-⋅⋅*Unflip
-
-*Utilities
-⋅⋅*Help
-⋅⋅*Info
-⋅⋅*Invite
-⋅⋅*Ping
-⋅⋅*Restart
-⋅⋅*SetStatus
-⋅⋅*Urban
+* Utilities
+  * Help
+  * Info
+  * Invite
+  * Ping
+  * Restart
+  * SetStatus
+  * Urban
 
 ## License
 
