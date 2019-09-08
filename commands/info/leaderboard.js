@@ -22,7 +22,8 @@ module.exports = class LeaderboardCommand extends Command {
                     type: 'string',
                     prompt: 'What leaderboard would like to see? Available leaderboards: level, fens.',
                     key: 'rtype',
-                    oneOf: ['level', 'lvl', 'money', 'balance', 'fens', 'experience', 'xp']
+                    oneOf: ['level', 'lvl', 'money', 'balance', 'fens', 'experience', 'xp'],
+                    parse: str => str.toLowerCase()
                 }
             ]
         });

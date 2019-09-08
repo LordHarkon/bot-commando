@@ -1,15 +1,26 @@
 const Discord = require('discord.js');
-const { applyText, nextLevel, findChannel } = require('../util/Util');
+const { applyText, nextLevel, findChannel, searchURL, findEmoji } = require('../util/Util');
 const { XPLOGS } = process.env;
 const { getLevel, getStats, getWarnings, setLevel, setStats, setWarnings } = require('../util/database.js');
 const Canvas = require('canvas');
-const { PREFIX, GUILDID } = process.env;
+const { PREFIX, GUILDID, EIN, GENERAL, NOTIFYROLE } = process.env;
 const cooldownExp = new Set();
 
 module.exports = async (message) => {
+    const client = message.client;
+
+    if(message.channel.type === "dm") {
+        if(message.author.id === EIN) {
+            if(searchURL(message.content)) {
+                let freeTalk = await findChannel(client, GENERAL);
+                let fencohee = findEmoji(client, 'fencohee');
+                freeTalk.send(`${fencohee} | ${message.content} <@&${NOTIFYROLE}>`)
+            }
+        }
+    }
+
     if(message.channel.type === "dm" || message.channel.type === "group" || message.author.bot) return;
 
-    const client = message.client;
     const xpLogs = findChannel(client, XPLOGS);
 
     const LevelSystem = getLevel(message.author.id);
