@@ -123,8 +123,20 @@ module.exports = class Util {
 		return client.guilds.get(id);
 	}
 
-	static findEmoji(client, name) { // client = this.client
+	static findEmoji(client, name) { // client = this.client || client = message.client
 		return client.emojis.find(emoji => emoji.name == name);
+	}
+
+	static findRole(client, name, guildid) {
+		return client.guilds.get(guildid).roles.find(role => role.name === name);
+	}
+	
+	static addRole(client, role, guildid, id) {
+		client.guilds.get(guildid).members.get(id).roles.add(role);
+	}
+	
+	static removeRole(client, role, guildid, id) {
+		client.guilds.get(guildid).members.get(id).roles.remove(role);
 	}
 
 	static percentage(x,y){
