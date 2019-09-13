@@ -149,7 +149,12 @@ module.exports = class StatusCommand extends Command {
         ctx.fillText(`${Experience} / ${nextLevelXP} (${percentage(Experience,nextLevelXP)} %)`, canvas.width / 3.76, canvas.height / 1.3);
 
         // Avatar Image
-        const avatar = await Canvas.loadImage(`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`);
+        let avatar;
+        try {
+            avatar = await Canvas.loadImage(`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`);
+        } catch (e) {
+            avatar = await Canvas.loadImage('./assets/images/no-avatar.png');
+        }
         ctx.drawImage(avatar, 19.5, 17.5, 86.5, 87.5);
 
         const attachment = canvas.toBuffer();
