@@ -3,18 +3,18 @@ const { applyText, nextLevel, findChannel, searchURL, findEmoji } = require('../
 const { XPLOGS } = process.env;
 const { getLevel, getStats, getWarnings, setLevel, setStats, setWarnings } = require('../util/database.js');
 const Canvas = require('canvas');
-const { PREFIX, GUILDID, EIN, GENERAL, NOTIFYROLE } = process.env;
+const { PREFIX, GUILDID, EIN, GENERAL, NOTIFYROLE, CHAPTERWEBHOOKID, CHAPTERWEBHOOKTOKEN } = process.env;
 const cooldownExp = new Set();
 
 module.exports = async (message) => {
     const client = message.client;
+    const newChapter = new Discord.WebhookClient(CHAPTERWEBHOOKID, CHAPTERWEBHOOKTOKEN);
 
     if(message.channel.type === "dm") {
         if(message.author.id === EIN) {
             if(searchURL(message.content)) {
-                let freeTalk = await findChannel(client, GENERAL);
                 let fencohee = findEmoji(client, 'fencohee');
-                freeTalk.send(`${fencohee} | ${message.content} <@&${NOTIFYROLE}>`)
+                newChapter.send(`${fencohee} | ${message.content} <@&${NOTIFYROLE}>`)
             }
         }
     }
