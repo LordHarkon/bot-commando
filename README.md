@@ -73,6 +73,13 @@ The bot has currently a total of 45 commands.
   * SetStatus
   * Urban
 
+## TODO
+* Add
+  * Block Experience Command - Admin/User
+  * Block Leveling Command - Admin/User
+  * Convert Experience to Fens - User
+  * Blacklist Command - Stops the user from using any command or specified commands - Admin
+
 ## License
 
 [GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/)
