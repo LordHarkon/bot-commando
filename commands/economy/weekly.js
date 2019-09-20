@@ -18,7 +18,7 @@ module.exports = class WeeklyCommand extends Command {
         });
     }
 
-    run(msg) {
+    async run(msg) {
         const level = await getLevel(msg.author.id);
 
         const weekly = (randomRange(10, 150) + Math.round(msg.author.id / Math.pow(10, 16)) + (100 * level)) * 7;
