@@ -30,6 +30,10 @@ module.exports = class PurgeCommand extends Command {
         });
     }
 
+    hasPermission(msg) {
+        return this.client.guilds.get(process.env.GUILDID).members.get(msg.author.id).roles.find(x => x.name === 'Admin' || x.name === 'Bird Admins' || x.name === 'Einlion') || this.client.isOwner(msg.author.id);
+    }
+
     async run(msg, { messages }) {
         msg.channel.bulkDelete(messages)
             .catch(err => msg.reply(`Error: ${err}`));

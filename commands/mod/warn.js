@@ -1,6 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { getWarnings, setWarnings } = require('../../util/database');
-const { MODLOG } = process.env;
+const { getWarnings, setWarnings, addWarnings } = require('../../util/db');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class WarnCommand extends Command {
@@ -32,23 +31,25 @@ module.exports = class WarnCommand extends Command {
         });
     }
 
-    async run(msg, { user, reason }) {
-        const wa = getWarnings(user.id);
+    hasPermission(msg) {
+        return this.client.guilds.get(process.env.GUILDID).members.get(msg.author.id).roles.find(x => x.name === 'Moderator' || x.name === 'Admin' || x.name === 'Bird Admins' || x.name === 'Einlion') || this.client.isOwner(msg.author.id);
+    }
 
-        const modlog = this.client.channels.find(x => x.name === MODLOG);
+    async run(msg, { user, reason }) {
+        const wa = await getWarnings(user.id);
+
+        const modlog = this.client.channels.find(x => x.name === process.env.MODLOG);
 
         if(!modlog) {
-            await msg.guild.createChannel(MODLOG, 'text');
+            await msg.guild.createChannel(process.env.MODLOG, 'text');
         }
 
-        wa.warnings++;
-
-        setWarnings(wa);
+        addWarnings(user.id);
 
         const log = new MessageEmbed()
             .setAuthor(`${msg.author.tag} (${msg.author.id})`, msg.author.displayAvatarURL({size: 2048}))
             .setColor(0x800080)
-            .setDescription(`**Action:** Warning\n**Target:** ${user.tag} (${user.id})\n**Current Warnings:** ${wa.warnings}\n**Reason:** ${reason}`)
+            .setDescription(`**Action:** Warning\n**Target:** ${user.tag} (${user.id})\n**Current Warnings:** ${wa}\n**Reason:** ${reason}`)
             .setTimestamp()
         
         await modlog.send(log);

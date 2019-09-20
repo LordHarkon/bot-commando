@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { addExperience, removeExperience } = require('../../util/level');
+const { addExperience, removeExperience } = require('../../util/db');
 const { formatNumber } = require('../../util/Util');
 
 module.exports = class CheatExperienceCommand extends Command {

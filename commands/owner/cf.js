@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { addMoney, removeMoney } = require('../../util/bank');
+const { addMoney, removeMoney } = require('../../util/db');
 const { formatNumber } = require('../../util/Util');
 
 module.exports = class CheatFensCommand extends Command {

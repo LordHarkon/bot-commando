@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { addLevel, removeLevel } = require('../../util/level');
+const { addLevel, removeLevel } = require('../../util/db');
 const { formatNumber } = require('../../util/Util');
 
 module.exports = class CheatLevelCommand extends Command {

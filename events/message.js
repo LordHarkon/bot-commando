@@ -1,38 +1,35 @@
 const Discord = require('discord.js');
 const { applyText, nextLevel, findChannel, searchURL, findEmoji } = require('../util/Util');
-const { XPLOGS } = process.env;
-const { getLevel, getStats, getWarnings, setLevel, setStats, setWarnings } = require('../util/database.js');
+const { getLevel, getMessages, getWarnings, setLevel, addLevel, addMessages, setWarnings, addWarnings, setExperience, getExperience, addExperience, getNextLevelXP, setNextLevelXP } = require('../util/db');
 const Canvas = require('canvas');
-const { PREFIX, GUILDID, EIN, GENERAL, NOTIFYROLE, CHAPTERWEBHOOKID, CHAPTERWEBHOOKTOKEN } = process.env;
 const cooldownExp = new Set();
 
 module.exports = async (message) => {
     const client = message.client;
-    const newChapter = new Discord.WebhookClient(CHAPTERWEBHOOKID, CHAPTERWEBHOOKTOKEN);
+    const newChapter = new Discord.WebhookClient(process.env.CHAPTERWEBHOOKID, process.env.CHAPTERWEBHOOKTOKEN);
 
     if(message.channel.type === "dm") {
-        if(message.author.id === EIN) {
+        if(message.author.id === process.env.EIN) {
             if(searchURL(message.content)) {
                 let fencohee = findEmoji(client, 'fencohee');
-                newChapter.send(`${fencohee} | ${message.content} <@&${NOTIFYROLE}>`)
+                newChapter.send(`${fencohee} | ${message.content} <@&${process.env.NOTIFYROLE}>`)
             }
         }
     }
 
     if(message.channel.type === "dm" || message.channel.type === "group" || message.author.bot) return;
 
-    const xpLogs = findChannel(client, XPLOGS);
+    const xpLogs = findChannel(client, process.env.XPLOGS);
 
-    const LevelSystem = getLevel(message.author.id);
-    const Experience = LevelSystem.experience;
-    const Level      = LevelSystem.level;
+    const Experience = getExperience(message.author.id);
+    const Level      = getLevel(message.author.id);
 
-    if(Experience < 0) LevelSystem.experience = 0;
-    else if(Level < 0) LevelSystem.level = 0;
+    if(Experience < 0) setExperience(message.author.id, 0);
+    else if(Level < 0) setLevel(message.author.id, 0);
 
-    LevelSystem.nextLevelXP = nextLevel(LevelSystem.level + 1);
+    setNextLevelXP(message.author.id, nextLevel(Level + 1));
 
-    if(!message.content.startsWith(PREFIX)) {
+    if(!message.content.startsWith(process.env.PREFIX)) {
         if (cooldownExp.has(message.author.id)) return;
         
         cooldownExp.add(message.author.id);
@@ -42,20 +39,16 @@ module.exports = async (message) => {
     
         let xp = Math.round(Math.random() * 10 + 1);
         
-        LevelSystem.experience += xp;
+        addExperience(message.author.id, xp);
         xpLogs.send(`**${message.author.username}** received __${xp} exp__! :tada:`);
         console.log(`${message.author.username} received ${xp} exp!`);
     }
 
-    const Message = getStats(message.author.id);
-
-    Message.messages++;
-
-    const warns = getWarnings(message.author.id);
+    addMessages(message.author.id)
 
     gibRole = (roleName) => {
-        let role = client.guilds.get(GUILDID).roles.find(role => role.name === roleName);
-        client.guilds.get(GUILDID).members.get(message.author.id).roles.add(role)
+        let role = client.guilds.get(process.env.GUILDID).roles.find(role => role.name === roleName);
+        client.guilds.get(process.env.GUILDID).members.get(message.author.id).roles.add(role)
     }
 
     if(Level < 10) '';
@@ -120,13 +113,10 @@ module.exports = async (message) => {
         
         xpLogs.send({ files: [{ attachment, name: 'levelup.png' }] })
         
-        let xp = nextLevel(LevelSystem.level + 1);
-        let res = Number.parseInt(LevelSystem.experience, 10) - Number.parseInt(xp, 10);
+        let xp = nextLevel(Level + 1);
+        let res = Number.parseInt(Experience, 10) - Number.parseInt(xp, 10);
         if(res < 0) res = 0;
-        LevelSystem.experience = res;
-        LevelSystem.level = Number.parseInt(LevelSystem.level, 10) + 1;
+        setExperience(message.author.id, res)
+        setLevel(message.author.id, (Number.parseInt(Level, 10) + 1));
     }
-    setLevel(LevelSystem);
-    setStats(Message);
-    setWarnings(warns);
 }

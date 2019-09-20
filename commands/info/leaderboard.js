@@ -3,6 +3,7 @@ const SQLite = require('better-sqlite3');
 const sql = new SQLite('./database.sqlite');
 const { MessageEmbed } = require('discord.js');
 const { formatNumber } = require('../../util/Util');
+const { topHundred } = require('../../util/db');
 
 module.exports = class LeaderboardCommand extends Command {
     constructor(client) {
@@ -31,11 +32,10 @@ module.exports = class LeaderboardCommand extends Command {
 
     async run(msg, { rtype }) {
         const levels = ['level', 'lvl', 'experience', 'xp'];
-        const fens = ['money', 'balance', 'fens'];
         if(levels.includes(rtype)) var name = 'Level';
         else var name = 'Fens';
-        const topLv = sql.prepare("SELECT * FROM levelSystem ORDER BY level DESC, experience DESC LIMIT 100;").all();
-        const topFens = sql.prepare("SELECT * FROM bank ORDER BY money DESC LIMIT 100;").all();
+        const topLv = topHundred('level');
+        const topFens = topHundred('bank');
 
         const embed = new MessageEmbed()
             .setTitle(`Leaderboard - ${name}`)

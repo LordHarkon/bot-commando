@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const { GUILDID, SUGGEST } = process.env;
 const { findChannel, findGuild } = require('../../util/Util');
 const { MessageEmbed } = require('discord.js');
 
@@ -27,8 +26,8 @@ module.exports = class suggestionCommand extends Command {
     }
 
     async run(msg, { string }) {
-        const guild = findGuild(this.client, GUILDID)
-        const channel = findChannel(guild, SUGGEST);
+        const guild = findGuild(this.client, process.env.GUILDID)
+        const channel = findChannel(guild, process.env.SUGGEST);
         const embed = new MessageEmbed()
             .setTitle("New Suggestion")
             .setDescription(string)

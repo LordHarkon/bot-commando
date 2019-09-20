@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { getWarnings } = require('../../util/database');
+const { getWarnings } = require('../../util/db');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class WarningsCommand extends Command {
@@ -26,8 +26,8 @@ module.exports = class WarningsCommand extends Command {
         });
     }
 
-    run(msg, { user }) {
-        const wa = getWarnings(user.id);
+    async run(msg, { user }) {
+        const wa = await getWarnings(user.id);
 
         const warn = new MessageEmbed()
             .setAuthor(user.tag, user.displayAvatarURL({size: 2048}))

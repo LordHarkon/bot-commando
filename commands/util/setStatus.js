@@ -24,6 +24,10 @@ module.exports = class SetStatusCommand extends Command {
         });
     }
 
+    hasPermission(msg) {
+        return this.client.guilds.get(process.env.GUILDID).members.get(msg.author.id).roles.find(x => x.name === 'Bird Admins' || x.name === 'Einlion') || this.client.isOwner(msg.author.id);
+    }
+
     run(msg, { status }) {
         this.client.user.setStatus(status);
         

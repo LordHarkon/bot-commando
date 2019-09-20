@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const { GUILDID } = process.env;
 
 module.exports = class NotifyCommand extends Command {
     constructor(client) {
@@ -26,21 +25,31 @@ module.exports = class NotifyCommand extends Command {
     }
 
     run(msg, { choice }) {
-        let role = this.client.guilds.get(GUILDID).roles.find(role => role.name === 'Notify Me Sempai');
+        let role = this.client.guilds.get(process.env.GUILDID).roles.find(role => role.name === 'Notify Me Sempai');
         switch (choice) {
             case 'remove':
             case 'del':
             case 'delete':
             case 'take': {
-                this.client.guilds.get(GUILDID).members.get(msg.author.id).roles.remove(role);
-                return msg.say(`Successfully took \`Notify Me Sempai\` from **${msg.author.tag}**.`);
+                if(this.client.guilds.get(process.env.GUILDID).members.get(msg.author.id).roles.find(x => x.name === 'Notify Me Sempai')){
+                    this.client.guilds.get(process.env.GUILDID).members.get(msg.author.id).roles.remove(role);
+                    return msg.say(`Successfully took \`Notify Me Sempai\` from **${msg.author.tag}**.`);
+                } else {
+                    return msg.reply(`You do not have the role \`Notify Me Sempai\`.`);
+                }
+                
             }
             case 'give':
             case 'add':
             case 'receive':
             default: {
-                this.client.guilds.get(GUILDID).members.get(msg.author.id).roles.add(role);
-                return msg.say(`Successfully added \`Notify Me Sempai\` to **${msg.author.tag}**.`);
+                if(this.client.guilds.get(process.env.GUILDID).members.get(msg.author.id).roles.find(x => x.name === 'Notify Me Sempai')) {
+                    return msg.reply(`You already have the role \`Notify Me Sempai\`.`)
+                } else {
+                    this.client.guilds.get(process.env.GUILDID).members.get(msg.author.id).roles.add(role);
+                    return msg.say(`Successfully added \`Notify Me Sempai\` to **${msg.author.tag}**.`);
+                }
+                
             }
         }
         

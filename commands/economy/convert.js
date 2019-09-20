@@ -1,6 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { balance, removeMoney } = require('../../util/bank');
-const { addExperience } = require('../../util/level');
+const { addExperience, balance, removeMoney } = require('../../util/db');
 
 module.exports = class ConvertCommand extends Command {
     constructor(client) {
@@ -14,8 +13,8 @@ module.exports = class ConvertCommand extends Command {
                     type: 'integer',
                     prompt: 'How many Fens would like to convert into experience points?',
                     key: 'fens',
-                    validate: (fens, msg) => {
-                        if(fens > balance(msg.author.id)) return `You do not have enough money to proceed. Please try again with a new sum.`;
+                    validate: async (fens, msg) => {
+                        if(fens > await balance(msg.author.id)) return `You do not have enough money to proceed. Please try again with a new sum.`;
                         if(fens < 10) return `You cannot convert less than 10 Fens. Please try again with a new sum.`;
                         return true;
                     }

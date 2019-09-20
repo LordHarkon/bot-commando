@@ -1,6 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { getWarnings, setWarnings } = require('../../util/database');
-const { LOGS } = process.env;
+const { getWarnings, removeWarnings, setWarnings } = require('../../util/db');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class RWCommand extends Command {
@@ -26,7 +25,7 @@ module.exports = class RWCommand extends Command {
                     type: 'user'
                 },
                 {
-                    key: 'number',
+                    key: 'warns',
                     prompt: 'How many warnings would like to remove?',
                     type: 'integer'
                 }
@@ -34,27 +33,24 @@ module.exports = class RWCommand extends Command {
         });
     }
 
-    async run(msg, { user, number }) {
-        const wa = getWarnings(user.id);
+    hasPermission(msg) {
+        return this.client.guilds.get(process.env.GUILDID).members.get(msg.author.id).roles.find(x => x.name === 'Moderator' || x.name === 'Admin' || x.name === 'Bird Admins' || x.name === 'Einlion') || this.client.isOwner(msg.author.id);
+    }
 
-        const logs = msg.guild.channels.find(x => x.name === LOGS);
+    async run(msg, { user, warns }) {
+        const logs = msg.guild.channels.find(x => x.name === process.env.LOGS);
 
         if(!logs) {
-            await msg.guild.createChannel(LOGS, 'text');
+            await msg.guild.createChannel(process.env.LOGS, 'text');
         };
 
-        let curr = wa.warnings;
-
-        wa.warnings = wa.warnings - number;
-
-        if(wa.warnings < 0) wa.warnings = 0;
-
-        setWarnings(wa);
+        removeWarnings(user.id, warns);
+        setWarnings(user.id, 0);
 
         const log = new MessageEmbed()
             .setAuthor(msg.author.tag, msg.author.displayAvatarURL({size: 2048}))
             .setColor(0xFF00FF)
-            .setDescription(`<@${msg.author.id}> removed ${curr} warning(s) from <@${user.id}>\n\n`)
+            .setDescription(`<@${msg.author.id}> removed ${warns} warning(s) from <@${user.id}>\n\n`)
             .setTimestamp();
 
         logs.send(log);

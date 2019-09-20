@@ -1,5 +1,4 @@
 const { Command } = require('discord.js-commando');
-const { GUILDID } = process.env;
 
 module.exports = class addRoleCommand extends Command {
     constructor(client) {
@@ -32,8 +31,12 @@ module.exports = class addRoleCommand extends Command {
         })
     }
 
+    hasPermission(msg) {
+        return this.client.guilds.get(process.env.GUILDID).members.get(msg.author.id).roles.find(x => x.name === 'Admin' || x.name === 'Bird Admins' || x.name === 'Einlion') || this.client.isOwner(msg.author.id);
+    }
+
     run(msg, { user, role }) {
-        this.client.guilds.get(GUILDID).members.get(user.id).roles.add(role)
+        this.client.guilds.get(process.env.GUILDID).members.get(user.id).roles.add(role)
         msg.say(`Successfully added ${role} to ${user}.`);
     }
 }

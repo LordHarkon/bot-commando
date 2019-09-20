@@ -1,15 +1,26 @@
 require('dotenv').config();
-const { PREFIX, OWNERS, TOKEN, MODLOG, LOGS } = process.env;
 const { Client } = require('discord.js-commando');
 const path = require('path');
 const goodbye = require('./assets/json/goodbye');
 const welcome = require('./assets/json/welcome');
 const { MessageEmbed } = require('discord.js');
 const { findChannel } = require('./util/Util');
+const winston = require('winston');
+
+const cmds = winston.createLogger({
+    transports: [
+        new (winston.transports.Console)(),
+        new (winston.transports.File)({ filename: 'commands.log' })
+    ],
+    format: winston.format.combine(
+        winston.format.timestamp({ format: 'DD/MM/YYYY HH:mm:ss' }),
+        winston.format.printf(log => `[${log.timestamp}] [${log.level.toUpperCase()}]: ${log.message}`)
+    )
+})
 
 const client = new Client({
-    commandPrefix: PREFIX,
-    owner: OWNERS.split(',')
+    commandPrefix: process.env.PREFIX,
+    owner: process.env.OWNERS.split(',')
 });
 
 client.registry
@@ -44,7 +55,11 @@ client
     .on('message', (message) => require('./events/message')(message))
     .on('disconnected', () => require('./events/disconnected'))
     .on('reconnecting', () => require('./events/reconnecting'))
-    .on('commandError', (cmd, err) => require('./events/commandError')(cmd, err))
+    .on('commandError', (cmd, err) => require('./events/commandError')(cmd, err));
+
+client.on('commandRun', (cmd, promise, msg) => {
+    cmds.info(`${msg.author.tag} (${msg.author.id}) ran the command ${cmd.name.toUpperCase()} in ${msg.guild.name} (${msg.guild.id})`);
+});
 
 client.on('guildMemberRemove', async member => {
     const channel = member.guild.systemChannel;
@@ -72,14 +87,14 @@ client.on('guildBanAdd', (guild, user) => {
         .addField('Action:', 'Ban')
         .addField('User:', `${user.username}#${user.discriminator} (ID: ${user.id})`);
 
-    return findChannel(guild, MODLOG).send(embed);
+    return findChannel(guild, process.env.MODLOG).send(embed);
 });
 
 client.on('messageDelete', async (message) => {
-    const logs = message.guild.channels.find(x => x.name === LOGS);
+    const logs = message.guild.channels.find(x => x.name === process.env.LOGS);
 
     if(message.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
-        await message.guild.createChannel(LOGS, 'text');
+        await message.guild.createChannel(process.env.LOGS, 'text');
     };
 
     if(!logs) {
@@ -107,10 +122,10 @@ client.on('messageDelete', async (message) => {
 client.on('messageUpdate', async (oldMessage, newMessage) => {
     if(oldMessage.author.bot || oldMessage.channel.type === 'dm') return null;
 
-    const logs = oldMessage.guild.channels.find(x => x.name === LOGS);
+    const logs = oldMessage.guild.channels.find(x => x.name === process.env.LOGS);
 
     if(oldMessage.guild.me.hasPermission('MANAGE_CHANNELS') && !logs) {
-        await oldMessage.guild.createChannel(LOGS, 'text');
+        await oldMessage.guild.createChannel(process.env.LOGS, 'text');
     };
 
     if(!logs) {
@@ -130,4 +145,4 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
     logs.send(embed);
 })
 
-client.login(TOKEN);
+client.login(process.env.TOKEN);

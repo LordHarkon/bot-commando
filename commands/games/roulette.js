@@ -1,6 +1,6 @@
 const { Command } = require('discord.js-commando');
 const { stripIndent } = require('common-tags');
-const { removeMoney, addMoney, balance } = require('../../util/bank');
+const { removeMoney, addMoney, balance } = require('../../util/db');
 const { formatNumber } = require('../../util/Util');
 
 const Roulette = require('../../structures/Roulette');
@@ -28,7 +28,7 @@ module.exports = class RouletteCommand extends Command {
                     prompt: `How many Fens do you wish to bet?`,
                     type: 'integer',
                     validate: async (bet, msg) => {
-                        const bal = await balance(msg.author.id)
+                        const bal = await balance(msg.author.id);
 
                         if(bal < bet) return stripIndent`You don't have enough Fens to bet.
                         Your current account balance: ${bal} Fens.

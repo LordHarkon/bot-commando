@@ -1,11 +1,9 @@
 const { Command } = require('discord.js-commando');
 const Canvas = require('canvas');
 const moment = require('moment');
-const { getStats } = require('../../util/database');
-const { getLevel, getExperience, getNextLevelXP } = require('../../util/level');
+const { getLevel, getExperience, getNextLevelXP, getMessages } = require('../../util/db');
 const { percentage } = require('../../util/Util');
 const Discord = require('discord.js');
-const { GUILDID } = process.env;
 
 module.exports = class StatusCommand extends Command {
     constructor(client) {
@@ -31,12 +29,12 @@ module.exports = class StatusCommand extends Command {
     }
 
     async run(msg, { user }) {
-        var stats = getStats(user.id);
+        var stats = await getMessages(user.id);
 
-        var Level = getLevel(user.id)
-        var Experience = getExperience(user.id)
-        var nextLevelXP = getNextLevelXP(user.id)
-        var Messages = stats.messages;
+        var Level = await getLevel(user.id)
+        var Experience = await getExperience(user.id)
+        var nextLevelXP = await getNextLevelXP(user.id)
+        var Messages = await getMessages(user.id);
 
         // Function to calculate the age of the account
         const calculate_age = (x) => {
@@ -56,7 +54,7 @@ module.exports = class StatusCommand extends Command {
         var color = '';
 
         const hasRole = (roleName) => {
-            return this.client.guilds.get(GUILDID).members.get(user.id).roles.find(role => role.name === roleName)
+            return this.client.guilds.get(process.env.GUILDID).members.get(user.id).roles.find(role => role.name === roleName)
         }
         
         if(hasRole('Einlion') || hasRole('Bird Admins')) age = 'Ageless'

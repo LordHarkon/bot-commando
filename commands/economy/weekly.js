@@ -1,6 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { addMoney } = require('../../util/bank');
-const { getLevel } = require('../../util/level');
+const { getLevel, addMoney } = require('../../util/db');
 const { randomRange } = require('../../util/Util');
 
 module.exports = class WeeklyCommand extends Command {
@@ -20,7 +19,7 @@ module.exports = class WeeklyCommand extends Command {
     }
 
     run(msg) {
-        const level = getLevel(msg.author.id);
+        const level = await getLevel(msg.author.id);
 
         const weekly = (randomRange(10, 150) + Math.round(msg.author.id / Math.pow(10, 16)) + (100 * level)) * 7;
 

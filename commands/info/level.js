@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { getLevel, getExperience, getNextLevelXP } = require('../../util/level');
+const { getLevel, getExperience, getNextLevelXP } = require('../../util/db');
 const { percentage } = require('../../util/Util');
 
 module.exports = class commandName extends Command {
@@ -25,10 +25,10 @@ module.exports = class commandName extends Command {
         })
     }
 
-    run(msg, { user }) {
-        var Level       = getLevel(user.id);
-        var Experience  = getExperience(user.id);
-        var nextLevelXP = getNextLevelXP(user.id);
+    async run(msg, { user }) {
+        var Level       = await getLevel(user.id);
+        var Experience  = await getExperience(user.id);
+        var nextLevelXP = await getNextLevelXP(user.id);
 
         msg.say({embed: {
             color: parseInt(user.id.substr(12,user.id.length)),
