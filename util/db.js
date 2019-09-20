@@ -44,7 +44,7 @@ module.exports = class Database {
      * @returns {number}
      */
     static async getLevel(id) {
-        let x = await query(`SELECT * FROM levelSystem WHERE id = "${id}"`);
+        let x = await query(`SELECT * FROM levelSystem WHERE id = "${id}";`);
         return await x[0].level;
     };
 
@@ -54,7 +54,7 @@ module.exports = class Database {
      * @returns {number}
      */
     static async getExperience(id) {
-        let x = await query(`SELECT * FROM levelSystem WHERE id = "${id}"`);
+        let x = await query(`SELECT * FROM levelSystem WHERE id = "${id}";`);
         return await x[0].experience;
     };
 
@@ -64,31 +64,42 @@ module.exports = class Database {
      * @returns {number}
      */
     static async getNextLevelXP(id) {
-        let x = await query(`SELECT * FROM levelSystem WHERE id = "${id}"`);
+        let x = await query(`SELECT * FROM levelSystem WHERE id = "${id}";`);
         return await x[0].nextLevelXP;
     };
 
     /**
      * Sets a user's level
      * @param {number} id - ID of the user's Discord account
-     * @param {number} level - The level that will be set as the user's
+     * @param {number} level - The level that will be set
      * @returns {boolean}
      */
     static setLevel(id, level) {
-        query(`UPDATE levelSystem SET level = ${Number(level)} WHERE id = "${id}"`);
+        query(`UPDATE levelSystem SET level = ${Number(level)} WHERE id = "${id}";`);
         return true;
     };
 
     /**
      * Sets a user's experience points
      * @param {number} id - ID of the user's Discord account
-     * @param {number} experience - The amount of experience points that will be set as the user's
+     * @param {number} experience - The amount of experience points that will be set
      * @returns {boolean}
      */
     static setExperience(id, experience) {
-        query(`UPDATE levelSystem SET experience = ${Number(experience)} WHERE id = "${id}"`);
+        query(`UPDATE levelSystem SET experience = ${Number(experience)} WHERE id = "${id}";`);
         return true;
     };
+
+    /**
+     * Sets the experience points needed for the user to level up to the next level
+     * @param {number} id - ID of the user's Discord account
+     * @param {number} nextLevelXP - The amount of experience points needed for the next level that will be set
+     * @returns {boolean}
+     */
+    static setNextLevelXP(id, nextLevelXP) {
+        query(`UPDATE levelSystem SET nextLevelXP = ${Number(nextLevelXP)} WHERE id = "${id}";`);
+        return true;
+    }
 
     /**
      * Adds to the current level of the user a specified amount
@@ -97,7 +108,7 @@ module.exports = class Database {
      * @returns {boolean}
      */
     static addLevel(id, level) {
-        query(`UPDATE levelSystem SET level = ${Number(level)} + level WHERE id = "${id}"`);
+        query(`UPDATE levelSystem SET level = ${Number(level)} + level WHERE id = "${id}";`);
         return true;
     }
 
@@ -108,7 +119,7 @@ module.exports = class Database {
      * @returns {boolean}
      */
     static addExperience(id, experience) {
-        query(`UPDATE levelSystem SET experience = ${Number(experience)} + experience WHERE id = "${id}"`);
+        query(`UPDATE levelSystem SET experience = ${Number(experience)} + experience WHERE id = "${id}";`);
         return true;
     }
 
@@ -119,7 +130,7 @@ module.exports = class Database {
      * @returns {boolean}
      */
     static removeLevel(id, level) {
-        query(`UPDATE levelSystem SET level = ${Number(level)} - level WHERE id = "${id}"`);
+        query(`UPDATE levelSystem SET level = ${Number(level)} - level WHERE id = "${id}";`);
         return true;
     }
 
@@ -130,7 +141,7 @@ module.exports = class Database {
      * @returns {boolean}
      */
     static removeExperience(id, experience) {
-        query(`UPDATE levelSystem SET experience = ${Number(experience)} - experience WHERE id = "${id}"`);
+        query(`UPDATE levelSystem SET experience = ${Number(experience)} - experience WHERE id = "${id}";`);
         return true;
     }
 
@@ -140,7 +151,7 @@ module.exports = class Database {
      * @returns {number}
      */
     static async balance(id) {
-        let x = await query(`SELECT * FROM bank WHERE id = "${id}"`);
+        let x = await query(`SELECT * FROM bank WHERE id = "${id}";`);
         return await x[0].balance
     }
 
@@ -151,7 +162,7 @@ module.exports = class Database {
      * @returns {number|string|date}
      */
     static async get(id, choice) {
-        let x = await query(`SELECT * FROM bank WHERE id = "${id}"`);
+        let x = await query(`SELECT * FROM bank WHERE id = "${id}";`);
         switch(choice) {
             case 'loan': return await x[0].loan;
             case 'day': return await x[0].day;
@@ -169,7 +180,7 @@ module.exports = class Database {
      * @returns {boolean}
      */
     static setMoney(id, sum) {
-        query(`UPDATE bank SET money = ${Number(sum)} WHERE id = "${id}"`);
+        query(`UPDATE bank SET money = ${Number(sum)} WHERE id = "${id}";`);
         return true;
     }
 
@@ -180,7 +191,7 @@ module.exports = class Database {
      * @returns {boolean}
      */
     static addMoney(id, sum) {
-        query(`UPDATE bank SET money = ${Number(sum)} + money WHERE id = "${id}"`);
+        query(`UPDATE bank SET money = ${Number(sum)} + money WHERE id = "${id}";`);
         return true;
     }
 
@@ -191,7 +202,7 @@ module.exports = class Database {
      * @returns {boolean}
      */
     static removeMoney(id, sum) {
-        query(`UPDATE bank SET money = ${Number(sum)} - money WHERE id = "${id}"`);
+        query(`UPDATE bank SET money = ${Number(sum)} - money WHERE id = "${id}";`);
         return true;
     }
 
@@ -201,7 +212,7 @@ module.exports = class Database {
      * @returns {number}
      */
     static async getMessages(id) {
-        let x = await query(`SELECT * FROM stats WHERE id = "${id}"`);
+        let x = await query(`SELECT * FROM stats WHERE id = "${id}";`);
         return await x[0].messages;
     }
 
@@ -211,7 +222,7 @@ module.exports = class Database {
      * @returns {number}
      */
     static async getWarnings(id) {
-        let x = await query(`SELECT * FROM stats WHERE id = "${id}"`);
+        let x = await query(`SELECT * FROM stats WHERE id = "${id}";`);
         return await x[0].warnings;
     }
 
@@ -222,7 +233,7 @@ module.exports = class Database {
      * @returns {boolean}
      */
     static setMessages(id, messages) {
-        query(`UPDATE stats SET messages = ${Number(messages)} WHERE id = "${id}"`);
+        query(`UPDATE stats SET messages = ${Number(messages)} WHERE id = "${id}";`);
         return true;
     }
 
@@ -233,18 +244,18 @@ module.exports = class Database {
      * @returns {boolean}
      */
     static setWarnings(id, warnings) {
-        query(`UPDATE stats SET warnings = ${Number(warnings)} WHERE id = "${id}"`);
+        query(`UPDATE stats SET warnings = ${Number(warnings)} WHERE id = "${id}";`);
         return true;
     }
 
     /**
      * Adds messages to a user (has nothing to do with the real amount of messages the user has sent)
      * @param {number} id - ID of the user's Discord account
-     * @param {number} messages - The amount of messages that will be added
+     * @param {number} messages - The amount of messages that will be added (Default: 1)
      * @returns {boolean}
      */
-    static addMessages(id, messages) {
-        query(`UPDATE stats SET messages = ${Number(messages)} + messages WHERE id = "${id}"`);
+    static addMessages(id, messages = 1) {
+        query(`UPDATE stats SET messages = ${Number(messages)} + messages WHERE id = "${id}";`);
         return true;
     }
 
@@ -255,18 +266,18 @@ module.exports = class Database {
      * @returns {boolean}
      */
     static addWarnings(id, warnings = 1) {
-        query(`UPDATE stats SET warnings = ${Number(warnings)} + warnings WHERE id = "${id}"`);
+        query(`UPDATE stats SET warnings = ${Number(warnings)} + warnings WHERE id = "${id}";`);
         return true;
     }
 
     /**
      * Reduces the number of messages the user has sent (has nothing to do with the real amount of messages the user has sent)
      * @param {number} id - ID of the user's Discord account
-     * @param {number} messages - The amount of messages that will be reduced
+     * @param {number} messages - The amount of messages that will be reduced (Default: 1)
      * @returns {boolean}
      */
-    static removeMessages(id, messages) {
-        query(`UPDATE stats SET messages = ${Number(messages)} - messages WHERE id = "${id}"`);
+    static removeMessages(id, messages = 1) {
+        query(`UPDATE stats SET messages = ${Number(messages)} - messages WHERE id = "${id}";`);
         return true;
     }
 
@@ -276,7 +287,30 @@ module.exports = class Database {
      * @param {number} warnings - The number of warnings to be removed (Default: 1)
      */
     static removeWarnings(id, warnings = 1) {
-        query(`UPDATE stats SET warnings = ${Number(warnings)} - warnings WHERE id = "${id}"`);
+        query(`UPDATE stats SET warnings = ${Number(warnings)} - warnings WHERE id = "${id}";`);
         return true;
+    }
+
+    /**
+     * Returns the top 100 entries in the databse depending on the choice
+     * @param {string} choice [level|messages|bank] - The choice of which top will be requested
+     * @returns {object}
+     */
+    static async topHundred(choice) {
+        switch(choice) {
+            case 'bank': {
+                let x = await query(`SELECT * FROM bank ORDER BY money DESC LIMIT 100;`)
+                return await x;
+            }
+            case 'messages': {
+                let x = await query(`SELECT * FROM stats ORDER BY messages DESC LIMIT 100;`)
+                return await x;
+            }
+            case 'level':
+            default: {
+                let x = await query(`SELECT * FROM levelSystem ORDER BY level DESC, experience DESC LIMIT 100;`);
+                return await x;
+            }
+        }
     }
 }
