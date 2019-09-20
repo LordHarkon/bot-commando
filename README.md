@@ -2,6 +2,8 @@
 
 Bot (Commando) is a bot created for a private server using the framework [discord.js-commando](https://github.com/discordjs/Commando).
 
+![GitHub](https://img.shields.io/github/license/LordHarkon/bot-commando) ![GitHub top language](https://img.shields.io/github/languages/top/LordHarkon/bot-commando) ![Snyk Vulnerabilities for GitHub Repo](https://img.shields.io/snyk/vulnerabilities/github/LordHarkon/bot-commando)
+
 ## Information
 
 The bot has currently a total of 45 commands.
@@ -72,6 +74,13 @@ The bot has currently a total of 45 commands.
   * Restart
   * SetStatus
   * Urban
+
+## TODO
+* Add
+  * Block Experience Command - Admin/User
+  * Block Leveling Command - Admin/User
+  * Convert Experience to Fens - User
+  * Blacklist Command - Stops the user from using any command or specified commands - Admin
 
 ## License
 
