@@ -34,8 +34,8 @@ module.exports = class LeaderboardCommand extends Command {
         const levels = ['level', 'lvl', 'experience', 'xp'];
         if(levels.includes(rtype)) var name = 'Level';
         else var name = 'Fens';
-        const topLv = topHundred('level');
-        const topFens = topHundred('bank');
+        const topLv = await topHundred('level');
+        const topFens = await topHundred('bank');
 
         const embed = new MessageEmbed()
             .setTitle(`Leaderboard - ${name}`)
@@ -45,12 +45,10 @@ module.exports = class LeaderboardCommand extends Command {
         
         var users = [];
 
-        
-
         if(name === 'Level'){
             for(const data of topLv) {
                 if(users.length < 10) {
-                    const member = await this.client.users.get(data.id.toString())
+                    const member = await this.client.users.find(x => x.id == data.id);
                     if(member != undefined) {
                         users.push(`**${member.tag}**`);
                         embed.addField(`${users.length}. ${member.tag}`, `**Level __${data.level}__** (**__${formatNumber(data.experience)}__ experience**)`);
@@ -61,7 +59,7 @@ module.exports = class LeaderboardCommand extends Command {
         } else {
             for(const data of topFens) {
                 if(users.length < 10) {
-                    const member = await this.client.users.get(data.id.toString())
+                    const member = await this.client.users.find(x => x.id == data.id);
                     if(member != undefined) {
                         users.push(`**${member.tag}**`);
                         embed.addField(`${users.length}. ${member.tag}`, `**__${formatNumber(data.money)}__ Fens**`);

@@ -25,7 +25,8 @@ module.exports = class TransferCommand extends Command {
                     prompt: 'How much money do you wish to transfer?',
                     type: 'integer',
                     validate: async (fens, msg) => {
-                        if(fens > await balance(msg.author.id)) return `You do not have enough money to proceed. Please try again with a new sum.`;
+                        let bal = await balance(msg.author.id);
+                        if(fens > bal) return `You do not have enough money to proceed. Please try again with a new sum.`;
                         if(fens < 1) return `You cannot transfer less than 1 Fen. Please try again with a new sum.`;
                         return true;
                     }

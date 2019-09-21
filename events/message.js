@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const { applyText, nextLevel, findChannel, searchURL, findEmoji } = require('../util/Util');
-const { getLevel, getMessages, getWarnings, setLevel, addLevel, addMessages, setWarnings, addWarnings, setExperience, getExperience, addExperience, getNextLevelXP, setNextLevelXP } = require('../util/db');
+const { getLevel, setLevel, addLevel, addMessages, setExperience, getExperience, addExperience, getNextLevelXP, setNextLevelXP } = require('../util/db');
 const Canvas = require('canvas');
 const cooldownExp = new Set();
 
@@ -21,8 +21,8 @@ module.exports = async (message) => {
 
     const xpLogs = findChannel(client, process.env.XPLOGS);
 
-    const Experience = getExperience(message.author.id);
-    const Level      = getLevel(message.author.id);
+    const Experience = await getExperience(message.author.id);
+    const Level      = await getLevel(message.author.id);
 
     if(Experience < 0) setExperience(message.author.id, 0);
     else if(Level < 0) setLevel(message.author.id, 0);
@@ -116,7 +116,8 @@ module.exports = async (message) => {
         let xp = nextLevel(Level + 1);
         let res = Number.parseInt(Experience, 10) - Number.parseInt(xp, 10);
         if(res < 0) res = 0;
-        setExperience(message.author.id, res)
-        setLevel(message.author.id, (Number.parseInt(Level, 10) + 1));
+        setNextLevelXP(message.author.id, nextLevel(Level + 2));
+        setExperience(message.author.id, res);
+        addLevel(message.author.id, 1);
     }
 }

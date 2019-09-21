@@ -3,8 +3,8 @@ const yes = ['yes', 'y', 'ye', 'yeah', 'yup', 'yea', 'ya'];
 const no = ['no', 'n', 'nah', 'nope', 'nop'];
 
 module.exports = class Util {
-    static delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    static delay(seconds) {
+        return new Promise(resolve => setTimeout(resolve, seconds * 1000));
     }
 
     static shuffle(array) {

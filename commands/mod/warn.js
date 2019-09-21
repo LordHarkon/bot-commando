@@ -1,5 +1,5 @@
 const { Command } = require('discord.js-commando');
-const { getWarnings, setWarnings, addWarnings } = require('../../util/db');
+const { getWarnings, addWarnings } = require('../../util/db');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class WarnCommand extends Command {
@@ -49,7 +49,7 @@ module.exports = class WarnCommand extends Command {
         const log = new MessageEmbed()
             .setAuthor(`${msg.author.tag} (${msg.author.id})`, msg.author.displayAvatarURL({size: 2048}))
             .setColor(0x800080)
-            .setDescription(`**Action:** Warning\n**Target:** ${user.tag} (${user.id})\n**Current Warnings:** ${wa}\n**Reason:** ${reason}`)
+            .setDescription(`**Action:** Warning\n**Target:** ${user.tag} (${user.id})\n**Current Warnings:** ${wa + 1}\n**Reason:** ${reason}`)
             .setTimestamp()
         
         await modlog.send(log);

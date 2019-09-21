@@ -38,7 +38,7 @@ module.exports = class RWCommand extends Command {
     }
 
     async run(msg, { user, warns }) {
-        const logs = msg.guild.channels.find(x => x.name === process.env.LOGS);
+        const logs = msg.guild.channels.find(x => x.name === process.env.MODLOG);
 
         if(!logs) {
             await msg.guild.createChannel(process.env.LOGS, 'text');

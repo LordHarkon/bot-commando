@@ -32,7 +32,7 @@ module.exports = class WarningsCommand extends Command {
         const warn = new MessageEmbed()
             .setAuthor(user.tag, user.displayAvatarURL({size: 2048}))
             .setColor(0x000000)
-            .setDescription(`<@${user.id}> has ${wa.warnings} warnings.`)
+            .setDescription(`<@${user.id}> has ${wa} warnings.`)
             .setTimestamp();
 
         msg.say(warn);

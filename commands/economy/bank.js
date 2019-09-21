@@ -1,7 +1,6 @@
 const { Command } = require('discord.js-commando');
-const { balance, get } = require('../../util/db');
+const { balance } = require('../../util/db');
 const { MessageEmbed } = require('discord.js');
-const { stripIndent } = require('common-tags');
 
 module.exports = class BankCommand extends Command {
     constructor(client) {
@@ -27,12 +26,8 @@ module.exports = class BankCommand extends Command {
     }
 
     async run(msg, { user }) {
-        const money = await balance(user.id)
-        const loan = stripIndent`
-            **Money to pay (loan):** __${await get(user.id, 'loan')}__
-            **Interest rate:** __${await get(user.id, 'interest')}%/day__
-            **Time to pay:** __${(30-(await get(user.id, 'date'))) < 0 ? 0 : 30-(await get(user.id, 'date'))} Days__
-        `;
+        const money = await balance(user.id);
+
         var rank = '';
 
         if(money < 1000) rank = 'Get a job';
@@ -46,7 +41,7 @@ module.exports = class BankCommand extends Command {
             .setColor(0x0000ff)
             .setAuthor('Fenbank of United Headpats')
             .setThumbnail('https://i.imgur.com/52To2ip.png')
-            .setDescription(`**Client:** __${user.username}__\n**Balance:** __${money} Fens__\n${await get(user.id, 'loan') > 0 ? loan : `**Money to pay (loan):** __0__`}`)
+            .setDescription(`**Client:** __${user.username}__\n**Balance:** __${money} Fens__`)
             .setTimestamp()
             .setFooter(rank, user.displayAvatarURL)
         
