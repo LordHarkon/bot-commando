@@ -58,7 +58,12 @@ client
     .on('commandError', (cmd, err) => require('./events/commandError')(cmd, err));
 
 client.on('commandRun', (cmd, promise, msg) => {
-    cmds.info(`${msg.author.tag} (${msg.author.id}) ran the command ${cmd.name.toUpperCase()} in ${msg.guild.name} (${msg.guild.id})`);
+    if(msg.channel.type == "dm") {
+        cmds.info(`${msg.author.tag} (${msg.author.id}) ran the command ${cmd.name.toUpperCase()} in DM`);
+    } else {
+        cmds.info(`${msg.author.tag} (${msg.author.id}) ran the command ${cmd.name.toUpperCase()} in ${msg.guild.name} (${msg.guild.id})`);
+    }
+    
 });
 
 client.on('guildMemberRemove', async member => {
