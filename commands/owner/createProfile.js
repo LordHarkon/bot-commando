@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 const { create } = require('../../util/db');
 
-module.exports = class CuddleCommand extends Command {
+module.exports = class CreateProfileCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'createprofile',

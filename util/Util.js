@@ -139,6 +139,10 @@ module.exports = class Util {
 		client.guilds.get(guildid).members.get(id).roles.remove(role);
 	}
 
+	static hasRole(client, roleName, guildid, id) {
+		return client.guilds.get(guildid).members.get(id).roles.find(x => x.name === roleName);
+	}
+
 	static percentage(x,y){
 		return parseFloat(((x/y)*100).toFixed(1));
 	}
@@ -148,4 +152,10 @@ module.exports = class Util {
 	
 		return !!pattern.test(str);
 	}
+
+	static arrayRemove(arr, value) {
+		return arr.filter((ele) => {
+			return ele != value;
+		});
+	 }
 }

@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const { applyText, nextLevel, findChannel, searchURL, findEmoji } = require('../util/Util');
-const { getLevel, setLevel, addLevel, addMessages, setExperience, getExperience, addExperience, getNextLevelXP, setNextLevelXP } = require('../util/db');
+const { getLevel, setLevel, addLevel, addMessages, setExperience, getExperience, addExperience, getNextLevelXP, setNextLevelXP, create } = require('../util/db');
 const Canvas = require('canvas');
 const cooldownExp = new Set();
 
@@ -16,6 +16,8 @@ module.exports = async (message) => {
             }
         }
     }
+
+    create(message.author.id);
 
     if(message.channel.type === "dm" || message.channel.type === "group" || message.author.bot) return;
 
