@@ -285,10 +285,10 @@ module.exports = class Database {
     }
 
     static addStock(id, quantity) {
-        con.query(`UPDATE shop SET quantity = quantity + ${quantity} WHERE id = "${id}`);
+        con.query(`UPDATE shop SET quantity = quantity + ${quantity} WHERE id = "${id}"`);
     }
 
     static removeStock(id, quantity) {
-        con.query(`UPDATE shop SET quantity = quantity - ${quantity} WHERE id = "${id}`);
+        con.query(`UPDATE shop SET quantity = quantity - ${quantity} WHERE id = "${id}"`);
     }
 }

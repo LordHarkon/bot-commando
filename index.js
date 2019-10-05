@@ -70,6 +70,9 @@ client.on('guildMemberRemove', async member => {
     const channel = member.guild.systemChannel;
     if (!channel || !channel.permissionsFor(client.user).has('SEND_MESSAGES')) return null;
 
+    const membersChannel = member.guild.channels.find(x => x.id == '579240274908413972')
+    membersChannel.setName(`Members count: ${member.guild.memberCount}`);
+    
     const ciao = goodbye[Math.floor(Math.random() * goodbye.length)];
 	await channel.send(ciao.replace(/{{user}}/gi, `**${member.user.tag}**`));
 });
@@ -77,6 +80,9 @@ client.on('guildMemberRemove', async member => {
 client.on('guildMemberAdd', async member => {
     const channel = member.guild.systemChannel;
     if (!channel || !channel.permissionsFor(client.user).has('SEND_MESSAGES')) return null;
+
+    const membersChannel = member.guild.channels.find(x => x.id == '579240274908413972')
+    membersChannel.setName(`Members count: ${member.guild.memberCount}`);
 
     const hello = welcome[Math.floor(Math.random() * welcome.length)];
     await channel.send(hello.replace(/{{user}}/gi, `**${member.user.tag}**`));
