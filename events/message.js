@@ -117,7 +117,7 @@ module.exports = async (message) => {
             xpLogs.send(`<@${message.author.id}>`, { files: [{ attachment, name: 'levelup.png' }] });
 
             let xp = nextLevel(level + 1);
-            let res = Number.parseInt(exp, 10) - Number.parseInt(xp, 10);
+            let res = parseInt(exp) - parseInt(xp);
             if(res < 0) res = 0;
             setNextLevelXP(message.author.id, nextLevel(level + 2));
             setExperience(message.author.id, res);

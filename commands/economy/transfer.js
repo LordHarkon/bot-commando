@@ -7,7 +7,7 @@ module.exports = class TransferCommand extends Command {
             name: 'transfer',
             group: 'economy',
             memberName: 'transfer',
-            aliases: ['gib', 'pay', 'give'],
+            aliases: ['gib', 'pay'],
             description: 'Transfer a given amount of Fens from your balance to another user\'s balance. The transferance fee is of 15% from the total transfered amount.',
             guildOnly: true,
             throttling: {
