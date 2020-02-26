@@ -36,17 +36,15 @@ module.exports = class GiveCommand extends Command {
     }
 
     async run(msg, {user, experience}) {
+        if(user.id === msg.author.id) return await msg.reply(`You cannot give experience to yourself. Please try again.`);
+
         let currExp = await getExperience(msg.author.id);
         let currLvl = await getLevel(msg.author.id);
 
         let finalExp = 0;
         let finalLvl = 0;
 
-        let perc = (this.getAllExp(currLvl) + currExp * 15) / 100;
         let totalExperience = this.getAllExp(currLvl) + currExp;
-        console.log('Percentage Experience: ', perc);
-        console.log('Total Experience: ', totalExperience);
-        console.log('All Experience: ', this.getAllExp(currLvl));
 
         if(experience > totalExperience) {
             experience = totalExperience;
@@ -54,6 +52,8 @@ module.exports = class GiveCommand extends Command {
         } else {
             finalExp = totalExperience - experience;
         }
+
+        let perc = (experience * 15) / 100;
 
         if(experience > currExp) {
             while(finalExp > nextLevel(finalLvl + 1)) {

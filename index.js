@@ -5,7 +5,7 @@ const goodbye = require('./assets/json/goodbye');
 const welcome = require('./assets/json/welcome');
 const {MessageEmbed} = require('discord.js');
 const {findChannel} = require('./util/Util');
-const {createCommandUse, addCommandUse, create} = require('./util/db');
+const {create} = require('./util/db');
 const winston = require('winston');
 
 const cmds = winston.createLogger({
@@ -61,12 +61,8 @@ client
 client.on('commandRun', async (cmd, promise, msg) => {
     if (msg.channel.type === "dm") {
         cmds.info(`${msg.author.tag} (${msg.author.id}) ran the command ${cmd.name.toUpperCase()} in DM`);
-        await createCommandUse(cmd.name.toLowerCase());
-        await addCommandUse(cmd.name.toLowerCase());
     } else {
         cmds.info(`${msg.author.tag} (${msg.author.id}) ran the command ${cmd.name.toUpperCase()} in ${msg.guild.name} (${msg.guild.id})`);
-        await createCommandUse(cmd.name.toLowerCase(), msg.guild.id);
-        await addCommandUse(cmd.name.toLowerCase(), msg.guild.id);
     }
 
 });
