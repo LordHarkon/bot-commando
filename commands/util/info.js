@@ -31,8 +31,28 @@ module.exports = class InfoCommand extends Command {
             .addField('❯ Source Code', 'N/A', true)
 			.addField('❯ Memory Usage', `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`, true)
 			.addField('❯ Uptime', moment.duration(this.client.uptime).format('hh:mm:ss', { trim: false }), true)
-			.addField('❯ Node Version', process.version, true)
-			.addField('❯ Dependencies', this.parseDependencies());
+			.addField('❯ Node Version', process.version, true);
+
+		if(this.parseDependencies().length < 1024) {
+			embed.addField('❯ Dependencies', this.parseDependencies());
+		} else {
+			let dep = this.parseDependencies().split(', ');
+			let first = [];
+			let second = [];
+			let count = 1;
+			while(String(first).length < 1024 && dep.length !== 0) {
+				if(String(first).length > 900) {
+					embed.addField(`❯ Dependencies (${count})`, first.join(', '));
+					second = first;
+					first = [];
+					count++;
+				} else {
+					first.push(dep.shift())
+				}
+			}
+			if(first !== second && first.length !== 0) embed.addField(`❯ Dependencies (${count})`, first.join(', '));
+		}
+
 		return msg.embed(embed);
     }
     

@@ -25,7 +25,8 @@ module.exports = class CheatFensCommand extends Command {
                 {
                     key: 'user',
                     prompt: 'To/From which user do you wish to give/take the Fens?',
-                    type: 'user'
+                    type: 'user',
+                    default: msg => msg.author
                 }
             ]
         });
@@ -35,10 +36,10 @@ module.exports = class CheatFensCommand extends Command {
         msg.say('Done.');
 
         if(sum > 0) {
-            addMoney(user.id, Number(sum));
+            addMoney(user.id, parseInt(sum));
             return msg.direct(`${formatNumber(sum)} ${sum == 1 ? 'Fen has' : 'Fens have'} been deposited into ${user.username}'s account.`);
         } else {
-            removeMoney(user.id, Number(sum * -1));
+            removeMoney(user.id, parseInt(sum * -1));
             return msg.direct(`${formatNumber(sum * -1)} ${sum == -1 ? 'Fen has' : 'Fens have'} been retracted from ${user.username}'s account.`);
         }
     }

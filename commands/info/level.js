@@ -1,8 +1,8 @@
 const { Command } = require('discord.js-commando');
 const { getLevel, getExperience, getNextLevelXP } = require('../../util/db');
-const { percentage } = require('../../util/Util');
+const { percentage, formatNumber } = require('../../util/Util');
 
-module.exports = class commandName extends Command {
+module.exports = class LevelCommand extends Command {
     constructor(client) {
         super(client, {
             name: 'level',
@@ -32,7 +32,7 @@ module.exports = class commandName extends Command {
 
         msg.say({embed: {
             color: parseInt(user.id.substr(12,user.id.length)),
-            description: `Level: **__${Level}__**\nExperience: **__${Experience} / ${nextLevelXP} (${percentage(Experience,nextLevelXP)} %)__**`,
+            description: `Level: **__${formatNumber(Level)}__**\nExperience: **__${formatNumber(Experience)} / ${formatNumber(nextLevelXP)} (${percentage(Experience,nextLevelXP)} %)__**`,
             timestamp: new Date(),
             author: {
                 name: user.username,

@@ -1,6 +1,7 @@
 const { Command } = require('discord.js-commando');
 const { MessageEmbed } = require('discord.js');
-const { item, balance, getLevel, getInventory, updateInventory, removeMoney, removeStock } = require('../../util/db');
+const { item_data, balance, getLevel, getInventory, updateInventory, removeMoney, removeStock } = require('../../util/db');
+const { formatNumber } = require('../../util/Util');
 
 module.exports = class BuyCommand extends Command {
     constructor(client) {
@@ -18,19 +19,17 @@ module.exports = class BuyCommand extends Command {
                 {
                     type: 'integer',
                     prompt: `What is the ID of the item that you wish to buy? To know the ID of an item use \`>shop\`.`,
-                    key: 'item_id',
-                    validate: async (item_id, msg) => {
-                        let x = await item(item_id);
-                        let l = await getLevel(msg.author.id);
-                        if(x == undefined) return `Item ID invalid. Please try again.`
-                        if(l < x.min_level) return `your level is too low to buy this item. You need ${x.min_level - l} more levels to be able to buy this item.`
-                        return true;
-                    }
+                    key: 'item_id'
                 },
                 {
                     type: 'integer',
                     prompt: 'How many items would you like to buy ?',
                     key: 'quantity',
+                    validate: (quantity) => {
+                        if(parseInt(quantity) < 0) return `The amount you are trying is negative. Please try again.`;
+                        if(parseInt(quantity) === 0) return `You can't buy nothing of something. Please try again.`;
+                        return true;
+                    },
                     default: 1
                 }
             ]
@@ -38,76 +37,93 @@ module.exports = class BuyCommand extends Command {
     }
 
     async run(msg, { item_id, quantity }) {
-        let x = await item(item_id);
-        let y = await balance(msg.author.id);
-        if(y < x.price * quantity) return msg.reply(`You do not have enough money to buy this item. You need \`${x.price * quantity - y}\` more Fens to buy it.`);
-        if(x.quantity && x.quantity < quantity) return msg.reply(`You are trying to buy more items than are on stock. Please try again with a lower number.`);
+        const item = await item_data(item_id);
+        const user_balance = await balance(msg.author.id);
+        const inv = await getInventory(msg.author.id);
+        const level = await getLevel(msg.author.id);
 
-        let item_data = await item(item_id);
-        let inv_item = {
-            id: item_data.id,
-            name: item_data.name,
-            description: item_data.description,
-            quantity: quantity,
-            image: item_data.image
-        }
+        if(item === undefined) return msg.reply('Item ID invalid. Please try again.');
+        if(level < item.min_level) return msg.reply(`You are too low leveled to buy this item. You need ${item.min_level - level} more ${item.min_level - level > 1 ? 'levels' : 'level'} to be able to buy this item.`);
+        if(user_balance < item.price * quantity) return msg.reply(`You do not have enough money to buy ${quantity > 1 ? 'these items' : 'this item'}. You need \`${formatNumber(item.price * quantity - user_balance)}\` more Fens to buy ${quantity > 1 ? 'these items' : 'this item'}.`);
+        if(item.quantity && item.quantity < quantity) return msg.reply(`You are trying to buy more items than are on the stock. Current stock is of \`${formatNumber(item.quantity)}\` – **${item.name}**`);
+        if(item.quantity === 0 || item.quantity < 0) return msg.reply(`__${item.name}__ is out of stock.`);
 
-        let item_embed = new MessageEmbed()
-            .setAuthor(item_data.name, item_data.image)
-            .setThumbnail(item_data.image)
+        let embed = new MessageEmbed()
+            .setAuthor(item.name, item.image)
+            .setThumbnail(item.image)
             .setColor(0x000000)
-            .setDescription(`Are you sure you want to purchase ${quantity > 1 ? 'these items' : 'this item'}? If yes, the please react with ✅.\n\n**Name:** __${item_data.name}__\n${quantity > 1 ? `**Quantity:** ${quantity}\n` : ''}**Min. level:** ${item_data.min_level}\n**Description:** __${item_data.description}__\n**Price:** __${item_data.price * quantity}__`)
+            .setDescription(`Are you sure you want to purchase ${quantity > 1 ? 'these items' : 'this item'}? If yes, then please click on the ✅ reaction.\n
+                **Name:** __${item.name}__
+                **Quantity:** ${quantity > 1 ? formatNumber(quantity) : '∞'}
+                **Level needed:** ${item.min_level}
+                **Price:** __${item.price * quantity}__
+                **Description:** __${item.description}__`)
             .setTimestamp()
-        
-        msg.say(item_embed).then(message => {
+
+        msg.say(embed).then(message => {
             message.react('✅');
-            const acceptFilter = (reaction, user) => reaction.emoji.name ==='✅' && user.id === msg.author.id;
+            const acceptFilter = (reaction, user) => reaction.emoji.name === "✅" && user.id === msg.author.id;
 
             const accept = message.createReactionCollector(acceptFilter, { time: 60000 });
 
-            let timeout = setTimeout(() => {
+            const timeout = setTimeout(() => {
                 message.delete(1);
-                msg.reply(`you have not accepted in time. If you wish to try buying the item again, use ${msg.usage()}.`);
+                msg.reply(`You have not accepted in time. If you wish to try buying the ${quantity > 1 ? 'items' : 'item'} again, use ${msg.usage()}.`);
             }, 60000);
 
             accept.on('collect', async r => {
-                let x = await getInventory(msg.author.id);
-                let items_owned = JSON.parse(x["items_owned"]);
-                let items_history = JSON.parse(x["items_history"]);
-                let exists = false;
+                const items = JSON.parse(inv['items_owned']);
+                const history = JSON.parse(inv['items_history']);
+                let found = false;
 
-                if(items_owned.length >= x.inventory_size) return msg.reply(`sorry, your inventory is full. Please clean up some space and try again.`);
-
-                if(item_data.quantity) removeStock(item_data.id, quantity);
+                if(!this.inv_has_space(items.inventory_size, items.length)) return msg.reply(`Sorry, your inventory is full. Please clean up some space and try again.`);
+                if(!isNaN(item.quantity)) removeStock(item.id, quantity);
 
                 message.delete(1);
-                msg.say(`Congratulations, ${msg.author.tag}! You've successfully bought x${quantity} \`${item_data.name}\`. You can find ${quantity > 1 ? 'it' : 'them'} in your inventory.`);
-                
-                if(items_owned == '[]' || !items_owned) {
-                    items_owned = [].push(inv_item);
+                msg.reply(`You've successfully bought \`${quantity}\` – **${item.name}**. ${quantity > 1 ? 'They have' : 'It has'} been placed into your inventory.`);
+
+                const item_d = {
+                    id: item.id,
+                    name: item.name,
+                    description: item.description,
+                    quantity: quantity,
+                    image: item.image,
+                    eval_code: item.eval_code
+                };
+
+                if(this.inv_is_empty(items)) {
+                    items.push(item_d);
                 } else {
-                    items_owned.forEach(item => {
-                        if(item.id == inv_item.id) {
-                            item.quantity += quantity;
-                            exists = true;
+                    items.forEach(Item => {
+                        if(Item.id === item.id) {
+                            found = Item;
+                            Item.quantity += quantity;
                         }
                     });
-                    if(!exists) items_owned.push(inv_item);
-                    removeMoney(msg.author.id, Number(item_data.price * quantity))
+                    if(!found) items.push(item_d);
                 }
 
-                if(items_history == '[]' || !items_history) {
-                    items_history = [`Bought x${quantity} ${item_data.name} for ${item_data.price * quantity} Fens.`];
-                } else {
-                    items_history.push(`Bought x${quantity} ${item_data.name} for ${item_data.price * quantity} Fens.`);
-                }
+                removeMoney(msg.author.id, item.price * quantity);
 
-                items_owned = JSON.stringify(items_owned);
-                items_history = JSON.stringify(items_history);
-                
-                updateInventory(msg.author.id, `'${items_owned}'`, `'${items_history}'`);
+                history.push({
+                    type: 'bought',
+                    name: item.name,
+                    amount: quantity,
+                    date: new Date()
+                });
+
+                updateInventory(msg.author.id, JSON.stringify(items), JSON.stringify(history));
                 clearTimeout(timeout);
+                accept.stop();
             })
         })
     }
-}
+
+    inv_has_space(inventory_capacity = 20, occupied_slots = 0) {
+        return inventory_capacity >= occupied_slots + 1;
+    }
+
+    inv_is_empty(items) {
+        return items.length === 0;
+    }
+};

@@ -29,8 +29,8 @@ module.exports = class ConvertCommand extends Command {
     }
 
     run(msg, { fens }) {
-        addExperience(msg.author.id, Math.round(Number(fens, 10) / 10));
-        removeMoney(msg.author.id, Number(fens));
+        addExperience(msg.author.id, Math.round(parseInt(fens) / 10));
+        removeMoney(msg.author.id, parseInt(fens));
 
         msg.say(`${msg.author.username} has converted ${fens} Fens into ${Math.round(fens/10)} experience points.`);
     }

@@ -28,13 +28,17 @@ module.exports = class RouletteCommand extends Command {
                     prompt: `How many Fens do you wish to bet?`,
                     type: 'integer',
                     validate: async (bet, msg) => {
+                        bet = parseInt(bet);
                         const bal = await balance(msg.author.id);
 
-                        if(bal < bet) return stripIndent`You don't have enough Fens to bet.
+                        if(bal < bet) return stripIndent`
+                        You don't have enough Fens to bet.
                         Your current account balance: ${bal} Fens.
                         Please specify a valid amount of Fens.
-                        `
-                        if(![100, 200, 300, 400, 500, 1000, 2000, 5000].includes(Number(bet))) return stripIndent`Your bet can only be one of the following values: \`100, 200, 300, 400, 500, 1000, 2000, 5000\`.`
+                        `;
+                        if(bet > 1000000) return stripIndent`
+                            Your bet cannot be higher than 1,000,000.
+                        `;
                         return true;
                     }
                 },
@@ -62,25 +66,36 @@ module.exports = class RouletteCommand extends Command {
             }
 
             roulette.join(msg.author, bet, space);
-            removeMoney(msg.author.id, bet)
+            removeMoney(msg.author.id, bet);
             return msg.reply(`you have successfully placed your bet of ${bet} Fens on ${space}.`);
         }
 
         roulette = new Roulette(msg.guild.id);
         roulette.join(msg.author, bet, space);
-        removeMoney(msg.author.id, bet)
+        removeMoney(msg.author.id, bet);
 
         return msg.say(stripIndent`
             A new game of roulette has been initiated!
             Use ${msg.usage()} in the next 30 seconds to place your bet.
+            30 seconds left before betting is closed.
         `)
-            .then(async () => {
-                setTimeout(() => msg.say(`20 seconds left before betting is closed.`), 10000);
-                setTimeout(() => msg.say(`10 seconds left before betting is closed.`), 20000);
-                setTimeout(() => msg.say(`5 seconds left before betting is closed.`), 25000);
-                setTimeout(() => msg.say(`The roulette starts spinning!`), 29500);
+            .then(async (message) => {
+                let counter = 5;
+                const countText = (counter) => {
+                    return stripIndent`
+A new game of roulette has been initiated!
+Use ${msg.usage()} in the next 30 seconds to place your bet.
+${30 - counter} seconds left before betting is closed.
+`;
+                };
+                let timer = setInterval(() => {
+                    if (counter >= 25) clearInterval(timer);
+                    message.edit(countText(counter));
+                    counter += 5;
+                }, 5000);
+                setTimeout(() => message.edit(`The time has ended! The roulette starts spinning!`), 29500);
 
-                var winners = await roulette.awaitPlayers(31000);
+                let winners = await roulette.awaitPlayers(31000);
 
                 winners = winners.filter(player => player.winnings > 0);
 

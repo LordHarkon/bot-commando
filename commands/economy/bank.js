@@ -1,5 +1,6 @@
 const { Command } = require('discord.js-commando');
 const { balance } = require('../../util/db');
+const { formatNumber } = require('../../util/Util');
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class BankCommand extends Command {
@@ -41,7 +42,7 @@ module.exports = class BankCommand extends Command {
             .setColor(0x0000ff)
             .setAuthor('Fenbank of United Headpats')
             .setThumbnail('https://i.imgur.com/52To2ip.png')
-            .setDescription(`**Client:** __${user.username}__\n**Balance:** __${money} Fens__`)
+            .setDescription(`**Client:** __${user.username}__\n**Balance:** __${formatNumber(money)} Fens__`)
             .setTimestamp()
             .setFooter(rank, user.displayAvatarURL)
         

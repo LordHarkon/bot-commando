@@ -25,7 +25,8 @@ module.exports = class CheatLevelCommand extends Command {
                 {
                     key: 'user',
                     prompt: 'To/From which user do you wish to give/take the levels?',
-                    type: 'user'
+                    type: 'user',
+                    default: msg => msg.author
                 }
             ]
         });
@@ -35,10 +36,10 @@ module.exports = class CheatLevelCommand extends Command {
         msg.say('Done.');
 
         if(levels > 0) {
-            addLevel(user.id, Number(levels));
+            addLevel(user.id, parseInt(levels));
             return msg.direct(`${formatNumber(levels)} ${levels == 1 ? 'level has' : 'levels have'} been given to ${user.username}.`);
         } else {
-            removeLevel(user.id, Number(levels * -1));
+            removeLevel(user.id, parseInt(levels * -1));
             return msg.direct(`${formatNumber(levels * -1)} ${levels == -1 ? 'level has' : 'levels have'} been taken from ${user.username}.`);
         }
     }

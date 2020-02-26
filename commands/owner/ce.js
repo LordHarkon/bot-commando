@@ -25,7 +25,8 @@ module.exports = class CheatExperienceCommand extends Command {
                 {
                     key: 'user',
                     prompt: 'To/From which user do you wish to give/take the experience?',
-                    type: 'user'
+                    type: 'user',
+                    default: msg => msg.author
                 }
             ]
         });
@@ -35,10 +36,10 @@ module.exports = class CheatExperienceCommand extends Command {
         msg.say('Done.');
 
         if(xp > 0) {
-            addExperience(user.id, Number(xp));
+            addExperience(user.id, parseInt(xp));
             return msg.direct(`${formatNumber(xp)} experience have been given to ${user.username}.`);
         } else {
-            removeExperience(user.id, Number(xp * -1));
+            removeExperience(user.id, parseInt(xp * -1));
             return msg.direct(`${formatNumber(xp * -1)} experience have been taken from ${user.username}.`);
         }
     }

@@ -74,7 +74,7 @@ module.exports = class Database {
      * @param {number} level - The level that will be set
      */
     static setLevel(id, level) {
-        con.query(`UPDATE levelSystem SET level = ${Number(level)} WHERE id = "${id}"`);
+        con.query(`UPDATE levelSystem SET level = ${parseInt(level)} WHERE id = "${id}"`);
     };
 
     /**
@@ -83,7 +83,7 @@ module.exports = class Database {
      * @param {number} experience - The amount of experience points that will be set
      */
     static setExperience(id, experience) {
-        con.query(`UPDATE levelSystem SET experience = ${Number(experience)} WHERE id = "${id}"`);
+        con.query(`UPDATE levelSystem SET experience = ${parseInt(experience)} WHERE id = "${id}"`);
     };
 
     /**
@@ -92,7 +92,7 @@ module.exports = class Database {
      * @param {number} nextLevelXP - The amount of experience points needed for the next level that will be set
      */
     static setNextLevelXP(id, nextLevelXP) {
-        con.query(`UPDATE levelSystem SET nextLevelXP = ${Number(nextLevelXP)} WHERE id = "${id}"`);
+        con.query(`UPDATE levelSystem SET nextLevelXP = ${parseInt(nextLevelXP)} WHERE id = "${id}"`);
     };
 
     /**
@@ -101,7 +101,7 @@ module.exports = class Database {
      * @param {number} level - The amount of levels that will be added
      */
     static addLevel(id, level) {
-        con.query(`UPDATE levelSystem SET level = ${Number(level)} + level WHERE id = "${id}"`);
+        con.query(`UPDATE levelSystem SET level = ${parseInt(level)} + level WHERE id = "${id}"`);
     };
 
     /**
@@ -110,7 +110,7 @@ module.exports = class Database {
      * @param {number} experience - The amount of experience points that will be added
      */
     static addExperience(id, experience) {
-        con.query(`UPDATE levelSystem SET experience = ${Number(experience)} + experience WHERE id = "${id}"`);
+        con.query(`UPDATE levelSystem SET experience = ${parseInt(experience)} + experience WHERE id = "${id}"`);
     };
 
     /**
@@ -119,7 +119,7 @@ module.exports = class Database {
      * @param {number} level - The amount of levels that will be removed
      */
     static removeLevel(id, level) {
-        con.query(`UPDATE levelSystem SET level = level - ${Number(level)} WHERE id = "${id}"`);
+        con.query(`UPDATE levelSystem SET level = level - ${parseInt(level)} WHERE id = "${id}"`);
     };
 
     /**
@@ -128,7 +128,7 @@ module.exports = class Database {
      * @param {number} experience - The amount of experience points that will be removed
      */
     static removeExperience(id, experience) {
-        con.query(`UPDATE levelSystem SET experience = experience - ${Number(experience)} WHERE id = "${id}"`);
+        con.query(`UPDATE levelSystem SET experience = experience - ${parseInt(experience)} WHERE id = "${id}"`);
     };
 
     /**
@@ -147,7 +147,7 @@ module.exports = class Database {
      * @param {number} sum - The amount of money that will be set
      */
     static setMoney(id, sum) {
-        con.query(`UPDATE bank SET money = ${Number(sum)} WHERE id = "${id}"`);
+        con.query(`UPDATE bank SET money = ${parseInt(sum)} WHERE id = "${id}"`);
     };
 
     /**
@@ -156,7 +156,7 @@ module.exports = class Database {
      * @param {number} sum - The amount of money that will be added to the balance
      */
     static addMoney(id, sum) {
-        con.query(`UPDATE bank SET money = ${Number(sum)} + money WHERE id = "${id}"`);
+        con.query(`UPDATE bank SET money = ${parseInt(sum)} + money WHERE id = "${id}"`);
     };
 
     /**
@@ -165,7 +165,7 @@ module.exports = class Database {
      * @param {number} sum - The amount of money that will be removed from the balance
      */
     static removeMoney(id, sum) {
-        con.query(`UPDATE bank SET money = money - ${Number(sum)} WHERE id = "${id}"`);
+        con.query(`UPDATE bank SET money = money - ${parseInt(sum)} WHERE id = "${id}"`);
     };
 
     /**
@@ -194,7 +194,7 @@ module.exports = class Database {
      * @param {number} messages - The amount of messages the will be set
      */
     static setMessages(id, messages) {
-        con.query(`UPDATE stats SET messages = ${Number(messages)} WHERE id = "${id}"`);
+        con.query(`UPDATE stats SET messages = ${parseInt(messages)} WHERE id = "${id}"`);
     };
 
     /**
@@ -203,7 +203,7 @@ module.exports = class Database {
      * @param {number} warnings - The number of warnings that will be set
      */
     static setWarnings(id, warnings) {
-        con.query(`UPDATE stats SET warnings = ${Number(warnings)} WHERE id = "${id}"`);
+        con.query(`UPDATE stats SET warnings = ${parseInt(warnings)} WHERE id = "${id}"`);
     };
 
     /**
@@ -212,7 +212,7 @@ module.exports = class Database {
      * @param {number} messages - The amount of messages that will be added (Default: 1)
      */
     static addMessages(id, messages = 1) {
-        con.query(`UPDATE stats SET messages = ${Number(messages)} + messages WHERE id = "${id}"`);
+        con.query(`UPDATE stats SET messages = ${parseInt(messages)} + messages WHERE id = "${id}"`);
     };
 
     /**
@@ -221,7 +221,7 @@ module.exports = class Database {
      * @param {number} warnings - The number of warnings to add (Default: 1)
      */
     static addWarnings(id, warnings = 1) {
-        con.query(`UPDATE stats SET warnings = ${Number(warnings)} + warnings WHERE id = "${id}"`);
+        con.query(`UPDATE stats SET warnings = ${parseInt(warnings)} + warnings WHERE id = "${id}"`);
     };
 
     /**
@@ -230,7 +230,7 @@ module.exports = class Database {
      * @param {number} messages - The amount of messages that will be reduced (Default: 1)
      */
     static removeMessages(id, messages = 1) {
-        con.query(`UPDATE stats SET messages = messages - ${Number(messages)} WHERE id = "${id}"`);
+        con.query(`UPDATE stats SET messages = messages - ${parseInt(messages)} WHERE id = "${id}"`);
     };
 
     /**
@@ -239,7 +239,7 @@ module.exports = class Database {
      * @param {number} warnings - The number of warnings to be removed (Default: 1)
      */
     static removeWarnings(id, warnings = 1) {
-        con.query(`UPDATE stats SET warnings = warnings - ${Number(warnings)} WHERE id = "${id}"`);
+        con.query(`UPDATE stats SET warnings = warnings - ${parseInt(warnings)} WHERE id = "${id}"`);
     };
 
     /**
@@ -270,7 +270,7 @@ module.exports = class Database {
         return await x;
     }
 
-    static async item(item_id) {
+    static async item_data(item_id) {
         let x = await con.query(`SELECT * FROM shop WHERE id = "${item_id}"`);
         return await x[0];
     }
@@ -280,8 +280,8 @@ module.exports = class Database {
         return await x[0];
     }
 
-    static async updateInventory(id, items, history) {
-        con.query(`UPDATE inventory SET items_owned = ${items}, items_history = ${history} WHERE id = "${id}"`);
+    static updateInventory(id, items, history) {
+        con.query(`UPDATE inventory SET items_owned = '${items}', items_history = '${history}' WHERE id = "${id}"`);
     }
 
     static addStock(id, quantity) {
@@ -291,4 +291,34 @@ module.exports = class Database {
     static removeStock(id, quantity) {
         con.query(`UPDATE shop SET quantity = quantity - ${quantity} WHERE id = "${id}"`);
     }
-}
+
+    static createCommandUse(cmd, guildId = 0) {
+        con.query(`INSERT IGNORE INTO commands (command, use_count) VALUES ("${cmd}", 0)`);
+        if(parseInt(guildId) > 0) con.query(`INSERT IGNORE INTO commands (command, use_count) VALUES ("${guildId}_${cmd}", 0)`);
+    }
+
+    static addCommandUse(cmd, guildId = 0) {
+        con.query(`UPDATE commands SET use_count = use_count + 1 WHERE command = "${cmd}"`);
+        if(parseInt(guildId) > 0) con.query(`UPDATE commands SET use_count = use_count + 1 WHERE command = "${guildId}_${cmd}"`);
+    }
+
+    static async getCommandUse(guildId = 0, cmd) {
+        if (guildId > 0 ) {
+            let x  = await con.query(`SELECT * FROM commands WHERE command = "${guildId}_${cmd}"`);
+            return await x[0];
+        } else {
+            let x  = await con.query(`SELECT * FROM commands WHERE command = "${cmd}"`);
+            return await x[0];
+        }
+    }
+
+    static async getCommandUseTop(guildId = 0) {
+        if(guildId > 0) {
+            let x  = await con.query(`SELECT * FROM commands WHERE command LIKE "%${guildId}%" ORDER BY use_count DESC LIMIT 100;`);
+            return await x;
+        } else {
+            let x  = await con.query(`SELECT * FROM commands WHERE command NOT LIKE "%[0-9]%" ORDER BY use_count DESC LIMIT 100;`);
+            return await x;
+        }
+    }
+};

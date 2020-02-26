@@ -1,21 +1,11 @@
 const Discord = require('discord.js');
-const { applyText, nextLevel, findChannel, searchURL, findEmoji } = require('../util/Util');
+const { applyText, nextLevel, findChannel, searchURL, findEmoji, roundRect } = require('../util/Util');
 const { getLevel, setLevel, addLevel, addMessages, setExperience, getExperience, addExperience, getNextLevelXP, setNextLevelXP, create } = require('../util/db');
 const Canvas = require('canvas');
 const cooldownExp = new Set();
 
 module.exports = async (message) => {
     const client = message.client;
-    const newChapter = new Discord.WebhookClient(process.env.CHAPTERWEBHOOKID, process.env.CHAPTERWEBHOOKTOKEN);
-
-    if(message.channel.type === "dm") {
-        if(message.author.id === process.env.EIN) {
-            if(searchURL(message.content)) {
-                let fencohee = findEmoji(client, 'fencohee');
-                newChapter.send(`${fencohee} | ${message.content} <@&${process.env.NOTIFYROLE}>`)
-            }
-        }
-    }
 
     create(message.author.id);
 
@@ -46,80 +36,95 @@ module.exports = async (message) => {
         console.log(`${message.author.username} received ${xp} exp!`);
     }
 
-    addMessages(message.author.id)
+    addMessages(message.author.id);
 
     gibRole = (roleName) => {
-        let role = client.guilds.get(process.env.GUILDID).roles.find(role => role.name === roleName);
-        client.guilds.get(process.env.GUILDID).members.get(message.author.id).roles.add(role)
+        let guild = client.guilds.get(message.guild.id);
+        let role2 = guild.roles.find(r => r.name === roleName);
+        if (!guild.members.get(message.author.id).roles.has(role2)) return guild.members.get(message.author.id).roles.add(role2);
+        return null;
+    };
+
+    function checkAndGive(level) {
+        let souls = ['', 'Mortal Soul', 'Hero Soul', 'Lord Soul', 'Divine Soul', 'Realm Soul', 'Sage Soul', 'Sovereign Soul', 'Aspect Soul', 'Aspect Soul', 'Origin Soul'];
+        level = Math.floor(level / 10);
+
+        if(level === 0) return null;
+        else if(level >= 1 && level <= 10) gibRole(souls[level]);
+        else gibRole('The Path');
+
+        return null;
     }
 
-    if(Level < 10) '';
-    else if(Level < 20){
-        gibRole('Mortal Soul');
-    } else if(Level < 30){
-        gibRole('Hero Soul');
-    } else if(Level < 40){
-        gibRole('Lord Soul');
-    } else if(Level < 50){
-        gibRole('Divine Soul');
-    } else if(Level < 60){
-        gibRole('Realm Soul');
-    } else if(Level < 70){
-        gibRole('Sage Soul');
-    } else if(Level < 80){
-        gibRole('Sovereign Soul');
-    } else if(Level < 90){
-        gibRole('Aspect Soul');
-    } else if(Level < 100){
-        gibRole('Origin Soul');
-    } else if(Level > 100){
-        gibRole('The Path');
-    }
+    checkAndGive(Level);
 
-    if (Experience >= nextLevel(Level + 1)) {
-        const level = Level;
-        const canvas = Canvas.createCanvas(700, 250);
-		const ctx = canvas.getContext('2d');
+    const levelUp = async () => {
+        const exp = await getExperience(message.author.id);
+        const level = await getLevel(message.author.id);
 
-		const background = await Canvas.loadImage('./assets/images/bg.png');
-        ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-		
-		ctx.strokeStyle = '#74037b';
-		ctx.strokeRect(0, 0, canvas.width, canvas.height);
-        
-		ctx.font = '28px open-sans';
-		ctx.fillStyle = '#ffffff';
-		ctx.fillText('Congratulations,', canvas.width / 2.5, canvas.height / 3.5);
-        
-		ctx.font = applyText(canvas, message.author.username);
-		ctx.fillStyle = '#ffffff';
-		ctx.fillText(`${message.author.username}!`, canvas.width / 2.5, canvas.height / 1.8);
-        
-		ctx.font = '30px open-sans';
-        ctx.fillStyle = '#ffffff';
-		ctx.fillText(`You are now level ${level + 1}!`, canvas.width / 2.5, canvas.height / 1.25);
-        
-		ctx.font = '15px open-sans';
-        ctx.fillStyle = '#ffffff';
-		ctx.fillText(`EXPLOSIOOOOON!`, canvas.width / 1.9, canvas.height / 1.1);
-		
-		ctx.beginPath();
-        ctx.arc(125, 125, 100, 0, Math.PI * 2, true);
-        ctx.closePath();
-		ctx.clip();
-		
-		const avatar = await Canvas.loadImage(`https://cdn.discordapp.com/avatars/${message.author.id}/${message.author.avatar}.png`);
-		ctx.drawImage(avatar, 25, 25, 200, 200);
-        
-        const attachment = canvas.toBuffer();
-        
-        xpLogs.send({ files: [{ attachment, name: 'levelup.png' }] })
-        
-        let xp = nextLevel(Level + 1);
-        let res = Number.parseInt(Experience, 10) - Number.parseInt(xp, 10);
-        if(res < 0) res = 0;
-        setNextLevelXP(message.author.id, nextLevel(Level + 2));
-        setExperience(message.author.id, res);
-        addLevel(message.author.id, 1);
+        if(exp < 0) setExperience(message.author.id, 0);
+        else if(level < 0) setLevel(message.author.id, 0);
+
+        if (exp >= nextLevel(level + 1)) {
+            const canvas = Canvas.createCanvas(444, 250);
+            const ctx = canvas.getContext('2d');
+
+            const background = await Canvas.loadImage('./assets/images/bg4.png');
+            ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = '#74037b';
+            ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = '30px Azonix';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText('Congratulations', canvas.width / 2, 40);
+
+            ctx.shadowColor = '#add8e6';
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+            ctx.shadowBlur = 10;
+
+            ctx.font = '54px Azonix';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${level} -> ${level + 1}`, canvas.width / 2, canvas.height / 1.9);
+
+            ctx.shadowBlur = 0;
+
+            ctx.font = '48px Azonix';
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.fillText('level up!', canvas.width / 2, canvas.height / 1.1);
+
+            let tiers = ['', 'Mortal Soul', 'Hero Soul', 'Lord Soul', 'Divine Soul', 'Realm Soul', 'Sage Soul', 'Sovereign Soul', 'Aspect Soul', 'Aspect Soul', 'Origin Soul', 'The Path'];
+            let tierColors = ['#000000','#FF0000','#FFA500','#FFFF00','#008000','#0000FF','#4B0082','#EE82EE','#000000','#ffffff','#888888'];
+
+            let lv = Math.floor((level + 1) / 10);
+            ctx.font = '20px Azonix';
+            ctx.textAlign = "center";
+            ctx.shadowColor = 'white';
+            ctx.shadowOffsetX = 1;
+            ctx.shadowOffsetY = 1;
+
+            if(lv <= 10) {
+                ctx.fillStyle = tierColors[lv].toString();
+                ctx.fillText(tiers[lv],canvas.width / 2, canvas.height / 1.65);
+            } else ctx.fillStyle = tierColors[11];
+
+            const attachment = canvas.toBuffer();
+
+            xpLogs.send(`<@${message.author.id}>`, { files: [{ attachment, name: 'levelup.png' }] });
+
+            let xp = nextLevel(level + 1);
+            let res = Number.parseInt(exp, 10) - Number.parseInt(xp, 10);
+            if(res < 0) res = 0;
+            setNextLevelXP(message.author.id, nextLevel(level + 2));
+            setExperience(message.author.id, res);
+            addLevel(message.author.id, 1);
+
+            await levelUp();
+        }
     }
+    await levelUp();
 }

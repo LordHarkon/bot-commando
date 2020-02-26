@@ -26,8 +26,15 @@ module.exports = class ShopCommand extends Command {
         let itemsBulk = await shopItems();
 
         for(const item of itemsBulk) {
-            description = `${description}__${count}. **${item.name}**__ **(ID: ${item.id})**\n**Min. level:** ${item.min_level}\n**Price:** ${item.price} Fens\n**Quantity:** ${!item.quantity ? '∞' : item.quantity} left\n**Description:** ${item.description}\n\n`;
-            count++;
+            if(item.quantity !== 0) {
+                description = `${description}__${count}. **${item.name}**__ **(ID: ${item.id})**
+                    **Min. level:** ${item.min_level}
+                    **Price:** ${item.price} Fens
+                    **Stock:** ${!item.quantity ? '∞' : item.quantity} left
+                    **Description:** ${item.description}\n\n`;
+                count++;
+            }
+            
             if(count === 11) {
                 pages.push(description);
                 description = `Welcome to Fen's Botique to buy anything please use >buy <item_id> or <@${process.env.BOT_ID}>\n\n`;

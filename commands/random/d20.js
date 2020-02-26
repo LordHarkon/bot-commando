@@ -16,21 +16,20 @@ module.exports = class DTwentyCommand extends Command {
             args: [
                 {
                     type: 'string',
-                    prompt: 'Please choose your type of dice. (Ex: "d20" "d100" "4d6")',
-                    key: 'dice',
-                    validate: dice => {
-                        if(dice < 4) return `Dices cannot have less than 4 sides.`;
-                    }
+                    prompt: 'Please choose your type of dice. (Ex: "d20" "2d8+1" "4d6")',
+                    key: 'dice'
                 }
             ]
         });
     }
 
     run(msg, { dice }) {
-        let res = roll(dice);
-
-        if(res <= 0) res = 1;
-
-        msg.reply(`rolled a ${res}`);
+        try {
+            let res = roll(dice);
+            msg.reply(`rolled ${res}`);
+        } catch(e) {
+            console.log(e);
+            msg.reply('not possible. Try again with a different option.');
+        }
     }
 }

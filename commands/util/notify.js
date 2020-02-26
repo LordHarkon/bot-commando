@@ -7,6 +7,7 @@ module.exports = class NotifyCommand extends Command {
             group: 'util',
             memberName: 'notify',
             aliases: [],
+            guildOnly: true,
             description: 'Gives/Removes you the role `Notify Me Sempai`. The role will tell you when there\'s a new chapter.',
             throttling: {
                 usages: 1,
@@ -25,14 +26,14 @@ module.exports = class NotifyCommand extends Command {
     }
 
     run(msg, { choice }) {
-        let role = this.client.guilds.get(process.env.GUILDID).roles.find(role => role.name === 'Notify Me Sempai');
+        let role = this.client.guilds.get(msg.guild.id).roles.find(role => role.name === 'Notify Me Sempai');
         switch (choice) {
             case 'remove':
             case 'del':
             case 'delete':
             case 'take': {
-                if(this.client.guilds.get(process.env.GUILDID).members.get(msg.author.id).roles.find(x => x.name === 'Notify Me Sempai')){
-                    this.client.guilds.get(process.env.GUILDID).members.get(msg.author.id).roles.remove(role);
+                if(this.client.guilds.get(msg.guild.id).members.get(msg.author.id).roles.find(x => x.name === 'Notify Me Sempai')){
+                    this.client.guilds.get(msg.guild.id).members.get(msg.author.id).roles.remove(role);
                     return msg.say(`Successfully took \`Notify Me Sempai\` from **${msg.author.tag}**.`);
                 } else {
                     return msg.reply(`You do not have the role \`Notify Me Sempai\`.`);
@@ -54,4 +55,4 @@ module.exports = class NotifyCommand extends Command {
         }
         
     }
-}
+};
