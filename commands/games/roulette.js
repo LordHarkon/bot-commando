@@ -36,6 +36,9 @@ module.exports = class RouletteCommand extends Command {
                         Your current account balance: ${bal} Fens.
                         Please specify a valid amount of Fens.
                         `;
+                        if(bet <= 0) return stripIndent`
+                        Your bet cannot be lower than 1.
+                        `;
                         if(bet > 1000000) return stripIndent`
                             Your bet cannot be higher than 1,000,000.
                         `;
