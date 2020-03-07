@@ -6,3 +6,4 @@ package-lock.json
 *.sqlite-shm
 *.sqlite
 *.code-workspace
+*.log
