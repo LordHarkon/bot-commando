@@ -37,58 +37,65 @@ module.exports = class TagsCommand extends Command{
             return result;
         };
 
-        const getTags = async (no) => {
+        const window = {
+            "_gallery": ''
+        };
+
+        const getDetails = async() => {
             const $ = await fetchData();
-            const tags = $('#info > #tags').children().eq(no).text();
-            return tags.replace(/\t/g,'').replace(/\n/g,'').match(/((\b[a-z ]+\b\s)(\(\d+[,]+\d+\)|\(\d+\)))/g);
+            const script = $('body').find('script').eq(1).html();
+            const details = script.replace('\n','').replace('\t','');
+            eval(details);
         };
 
-        const getTitle = async () => {
-            const $ = await fetchData();
-            return $('#info > h1').text();
-        };
+        try {
+            await getDetails();
+        } catch (err) {
+            return msg.say('That number does not exist or something went try. Please try again or use a different number.');
+        }
 
-        if(await fetchData() === null) return msg.say('That number does not exist. Please try again using another number.');
+        const h = window._gallery;
 
-        let title = await getTitle();
-        let parodies = await getTags(0);
-        let chars = await getTags(1);
-        let Tags = await getTags(2);
-        let artists = await getTags(3);
-        let groups = await getTags(4);
-        let langs = await getTags(5);
-        let categs = await getTags(6);
+        const parodies = h.tags.filter(tag => tag.type === "parody").map(tag => {
+            return `**${tag.name}** (${tag.count})`
+        });
 
-        function bolden (varIn) {
-            let out = [];
-            if(varIn === null) return ['N/A'];
-            for(const varIns of varIn) {
-                out.push(varIns.replace(/(\b[a-z ]+\b)/g, `**$1**`));
-            }
-            return out;
-        };
+        const characters = h.tags.filter(tag => tag.type === "character").map(tag => {
+            return `**${tag.name}** (${tag.count})`
+        });
 
-        let parody = bolden(parodies);
-        let character = bolden(chars);
-        let tags = bolden(Tags);
-        let artist = bolden(artists);
-        let group = bolden(groups);
-        let lang = bolden(langs);
-        let categ = bolden(categs);
+        const tags = h.tags.filter(tag => tag.type === "tag").map(tag => {
+            return `**${tag.name}** (${tag.count})`
+        });
 
+        const artists = h.tags.filter(tag => tag.type === "artist").map(tag => {
+            return `**${tag.name}** (${tag.count})`
+        });
+
+        const groups = h.tags.filter(tag => tag.type === "group").map(tag => {
+            return `**${tag.name}** (${tag.count})`
+        });
+
+        const languages = h.tags.filter(tag => tag.type === "language").map(tag => {
+            return `**${tag.name}** (${tag.count})`
+        });
+
+        const categories = h.tags.filter(tag => tag.type === "category").map(tag => {
+            return `**${tag.name}** (${tag.count})`
+        });
 
         const embed = new MessageEmbed()
-            .setTitle(title)
-            .setDescription(`**__• Parodies:__**\n${parody.join(' ')}\n
-            **__• Characters:__**\n${character.join(' ')}\n
-            **__• Tags:__**\n${tags.join(' ')}\n
-            **__• Artists:__**\n${artist.join(' ')}\n
-            **__• Groups:__**\n${group.join(' ')}\n
-            **__• Languages:__**\n${lang.join(' ')}\n
-            **__• Categories:__**\n${categ.join(' ')}`)
+            .setTitle(h.title.pretty)
+            .setDescription(`**__• Parodies:__**\n${parodies.length > 0 ? parodies.join(', ') : 'N/A'}\n
+            **__• Characters:__**\n${characters.length > 0 ? characters.join(', ') : 'N/A'}\n
+            **__• Tags:__**\n${tags.length > 0 ? tags.join(', ') : 'N/A'}\n
+            **__• Artists:__**\n${artists.length > 0 ? artists.join(', ') : 'N/A'}\n
+            **__• Groups:__**\n${groups.length > 0 ? groups.join(', ') : 'N/A'}\n
+            **__• Languages:__**\n${languages.length > 0 ? languages.join(', ') : 'N/A'}\n
+            **__• Categories:__**\n${categories.length > 0 ? categories.join(', ') : 'N/A'}`)
             .setColor('#ED2553')
             .setTimestamp()
-            .setFooter(number)
+            .setFooter(`${number} • ${h.num_pages} pages • ${h.num_favorites} favorites`)
             .setThumbnail('https://i.imgur.com/8WU83ac.png');
 
         await msg.say(embed);
