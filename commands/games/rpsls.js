@@ -4,9 +4,9 @@ const choices = ['rock', 'paper', 'scissors', 'lizard', 'spock'];
 module.exports = class RPSLSCommand extends Command {
     constructor(client) {
         super(client, {
-            name: 'RPSLS',
+            name: 'rpsls',
             group: 'games',
-            memberName: 'RPSLS',
+            memberName: 'rpsls',
             description: 'Play Rock-Paper-Scissors-Lizard-Spock.',
             throttling: {
                 usages: 1,
