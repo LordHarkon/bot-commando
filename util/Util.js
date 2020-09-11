@@ -107,8 +107,16 @@ module.exports = class Util {
 		return client.channels.find(x => x.name === name);
 	}
 
+	static findChannelID(client, id) {
+		return client.channels.find(i => i == id);
+	}
+
 	static findGuild(client, id) { // client = this.client
-		return client.guilds.get(id);
+		return client.guilds.find(i => i.id == id);
+	}
+
+	static findUser(guild, id) {
+		return guild.members.find(i => i.id == id);
 	}
 
 	static findEmoji(client, name) { // client = this.client || client = message.client
